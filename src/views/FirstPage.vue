@@ -16,7 +16,7 @@
                 <div class="textAntrian-fp">
                     ANTRIAN
                 </div>
-                <div class="nomorAntrian-fp">{{ slicedAntrian }}</div>
+                <div class="nomorAntrian-fp">{{ getAntrianTerakhir }}</div>
             </div>
             <div class="box box2-2-fp">
                 <div class="contentBox2-2-fp">
@@ -27,43 +27,27 @@
             </div>
         </div>
     </div>
-</template>ss
+</template>
 
 <script setup>
 import Header from '../components/HeaderComponent.vue'
 import { ref, computed } from 'vue'
-import { useMyAppStore } from '@/stores/myAppStore';
+import { useStoreAdmin } from '@/stores/storeAdmin';
+import { useStoreAntrian } from '@/stores/storeAntrian';
 
 /*Using Store*/
-const myAppStore = useMyAppStore()
+const storeAdmin = useStoreAdmin()
+const storeAntrian = useStoreAntrian()
 
-const slicedAntrian = computed(() => {
-    return listAntrian.value[0].nomorAntrian;
+//computed
+const getAntrianTerakhir = computed(() => {
+    let antrian = storeAntrian.getAntrianAktifTerbesar
+    return antrian
 })
 
-const listAntrian = ref([
-    {
-        id: '0000',
-        nomorAntrian: '0',
-        time: new Date(),
-        isActive: false,
-    },
-    {
-        id: '0001',
-        nomorAntrian: '1',
-        time: new Date(),
-        isActive: false,
-        isQueue: false
-    },
-    {
-        id: '0002',
-        nomorAntrian: '2',
-        time: new Date(),
-        isActive: false,
-        isQueue: false
-    }
-
-])
+// const getAntrianAktif = computed(() => {
+//     let antrianAktif = storeAntrian.ge
+// })
 
 </script>
 
