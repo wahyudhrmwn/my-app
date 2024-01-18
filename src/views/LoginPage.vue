@@ -29,7 +29,7 @@
                 <p class="help is-danger">This password is invalid</p>
               </div>
 
-              <div class="buttonLogin">
+              <div class="buttonLogin" @click="storeAdmin.btnLogin">
                 <button class="button">Login</button>
               </div>
         </div>
@@ -37,7 +37,9 @@
 </template>
 
 <script setup>
-// import Header from '../components/HeaderComponent.vue'
+import { useStoreAdmin } from '@/stores/storeAdmin';
+
+const storeAdmin = useStoreAdmin()
 </script>
 
 <style scoped>

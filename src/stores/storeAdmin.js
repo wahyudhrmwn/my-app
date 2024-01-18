@@ -29,4 +29,21 @@ export const useStoreAdmin = defineStore('storeAdmin', {
       ]
     }
   },
+  getters: {
+
+  },
+  actions: {
+    btnLogin() {
+      console.log('Btn Login Clicked')
+    },
+    btnAntrianSelanjutnya() {
+      console.log('Btn Next Antrian Clicked')
+    },
+    btnResetAntrian() {
+      console.log('Btn Reset Antrian Clicked')
+    },
+    btnLogout() {
+      console.log('Btn Logout Clicked')
+    }
+  }
 })

@@ -34,10 +34,10 @@
             <div class="row1-col3">
               <div class="box box1-column3-row1">Minggu, 31 Desember 2023</div>
             </div>
-            <div class="row1-col3">
+            <div class="row1-col3" @click="storeAdmin.btnResetAntrian">
               <div class="box box2-column3-row1">Reset Antrian</div>
             </div>
-            <div class="row1-col3">
+            <div class="row1-col3" @click="storeAdmin.btnLogout">
               <div class="box box3-column3-row1">Logout</div>
             </div>
           </div>
@@ -49,7 +49,7 @@
               <div class="box box1-row2-column1">LOKET 1</div>
               <div class="box box2-row2-column1">Wahyu Dharmawan</div>
               <div class="box box3-row2-column1">19</div>
-              <div class="box box4-row2-column1">Antrian Selanjutnya</div>
+              <div class="box box4-row2-column1" @click="storeAdmin.btnAntrianSelanjutnya">Antrian Selanjutnya</div>
           </div>
           <div class="column is-one-thirds column2-row2">
               <div class="box box1-row2-column1">LOKET 2</div>
@@ -86,7 +86,11 @@
     </div>
   </template>
   
-  <script setup></script>
+<script setup>
+import { useStoreAdmin } from '@/stores/storeAdmin';
+
+const storeAdmin = useStoreAdmin()
+</script>
   
   <style scoped>
 

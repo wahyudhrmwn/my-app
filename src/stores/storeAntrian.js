@@ -159,4 +159,12 @@ export const useStoreAntrian = defineStore('storeAntrian', {
       return dataMenungguAkhir
     }
   },
+  actions: {
+    ambilAntrian() {
+      console.log('Ambil Antrian Clicked')
+    },
+    refresh() {
+      console.log('Refresh clicked')
+    }
+  }
 })
