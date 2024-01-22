@@ -3,7 +3,7 @@
     <div class="box box1-sp">
       <div class="box box1-1-sp">
         <div class="nomorAnda-sp">Nomor Antrian Anda</div>
-        <div class="angkaAntrian-sp">{{ antrianAnda }}</div>
+        <div class="angkaAntrian-sp">{{ nomorAntrianAnda[0].nomorAntrian }}</div>
       </div>
     </div>
     <div class="box box2-sp">
@@ -14,7 +14,7 @@
         </div>
       </div>
 
-      <div class="box box2-1-sp" v-for="(list, index) in listAntrian" :key="index">
+      <div class="box box2-1-sp" v-for="(list, index) in dataAntrian" :key="index">
         <div class="textAntrian-sp">ANTRIAN</div>
         <div class="nomorAntrian-sp">{{ list.nomorAntrian }}</div>
         <div class="nomorLoket-sp">Ke Loket {{ list.isLoket }}</div>
@@ -40,35 +40,44 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
+import { computed, reactive } from 'vue'
 import { useStoreAntrian } from '@/stores/storeAntrian'
 
 const storeAntrian = useStoreAntrian()
 
-const antrianAnda = ref(10)
-const listAntrian = reactive([
-  {
-    id: '0001',
-    nomorAntrian: '1',
-    isActive: true,
-    isQueue: true,
-    isLoket: '1'
-  },
-  {
-    id: '0002',
-    nomorAntrian: '2',
-    isActive: true,
-    isQueue: true,
-    isLoket: '2'
-  },
-  {
-    id: '0003',
-    nomorAntrian: '3',
-    isActive: true,
-    isQueue: true,
-    isLoket: '3'
+const localAntrian = JSON.parse(localStorage.getItem('nomorAntrianAnda'))
+
+let listAntrian = reactive([])
+
+const dataAntrian = computed(() => {
+  listAntrian = storeAntrian.getAllAntrianAktif
+  return listAntrian
+})
+
+const nomorAntrianAnda = computed(() => {
+  let antrianAnda = []
+  let nomorAnda = {}
+  if (
+    localAntrian.isActive === false &&
+    localAntrian.isCompleted === false &&
+    localAntrian.isQueue === true
+  ) {
+    nomorAnda.nomorAntrian = parseInt(localAntrian.nomorAntrian) + 1
+    nomorAnda.id = parseInt(localAntrian.id) + 1
+    nomorAnda.isActive = false
+    nomorAnda.isQueue = true
+    nomorAnda.isCompleted = false
+    nomorAnda.isLoket = 0
+
+    storeAntrian.$patch((state) => {
+      state.dataAntrian.push(nomorAnda)
+    })
+
+    antrianAnda.push(nomorAnda)
   }
-])
+
+  return antrianAnda
+})
 </script>
 
 <style scoped>

@@ -4,7 +4,7 @@
             <div class="field">
                 <label class="label">Email</label>
                 <div class="control has-icons-left has-icons-right">
-                  <input class="input is-danger" type="email" placeholder="Email input" value="hello@">
+                  <input v-model="emailAdmin" class="input is-danger" type="email" placeholder="Email input" value="hello@">
                   <span class="icon is-small is-left">
                     <font-awesome-icon icon="fa-solid fa-envelope"/>
                   </span>
@@ -18,7 +18,7 @@
               <div class="field">
                 <label class="label">Password</label>
                 <div class="control has-icons-left has-icons-right">
-                  <input class="input is-danger" type="password" placeholder="input password">
+                  <input v-model="passwordAdmin" class="input is-danger" type="password" placeholder="input password">
                   <span class="icon is-small is-left">
                     <font-awesome-icon icon="fa-solid fa-key"/>
                   </span>
@@ -29,7 +29,7 @@
                 <p class="help is-danger">This password is invalid</p>
               </div>
 
-              <div class="buttonLogin" @click="storeAdmin.btnLogin">
+              <div class="buttonLogin" @click="btnLogin">
                 <button class="button">Login</button>
               </div>
         </div>
@@ -38,8 +38,20 @@
 
 <script setup>
 import { useStoreAdmin } from '@/stores/storeAdmin';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
+const router = useRouter()
 const storeAdmin = useStoreAdmin()
+
+let emailAdmin = ref('')
+let passwordAdmin = ref('')
+
+let btnLogin = () => {
+  storeAdmin.btnLogin(emailAdmin, passwordAdmin)
+  router.replace('/counter')
+}
+
 </script>
 
 <style scoped>

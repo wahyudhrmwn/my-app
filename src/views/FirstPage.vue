@@ -19,7 +19,7 @@
                 <div class="nomorAntrian-fp">{{ getAntrianTerakhir }}</div>
             </div>
             <div class="box box2-2-fp">
-                <div class="contentBox2-2-fp" @click="storeAntrian.ambilAntrian">
+                <div class="contentBox2-2-fp" @click="btnAmbilAntrian">
                     <font-awesome-icon icon="fa-solid fa-circle-plus" class="iconPlus-fp" />
                     <p>Ambil Nomor</p>
                 </div>
@@ -31,13 +31,24 @@
 
 <script setup>
 import Header from '../components/HeaderComponent.vue'
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 // import { useStoreAdmin } from '@/stores/storeAdmin';
 import { useStoreAntrian } from '@/stores/storeAntrian';
 
 /*Using Store*/
 // const storeAdmin = useStoreAdmin()
 const storeAntrian = useStoreAntrian()
+const router = useRouter()
+
+onMounted(() => {
+    let localData = JSON.parse(localStorage.getItem('nomorAntrianAnda'))
+    if (localData !== null && localData.isCompleted === false) {
+        router.replace('/second')
+    } else {
+        router.replace('/')
+    }
+})
 
 //computed
 const getAntrianTerakhir = computed(() => {
@@ -45,6 +56,10 @@ const getAntrianTerakhir = computed(() => {
     return antrian
 })
 
+const btnAmbilAntrian = () => {
+    storeAntrian.ambilAntrian()
+    router.replace('/second')
+}
 // const getAntrianAktif = computed(() => {
 //     let antrianAktif = storeAntrian.ge
 // })

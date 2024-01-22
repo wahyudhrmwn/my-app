@@ -8,33 +8,44 @@ export const useStoreAdmin = defineStore('storeAdmin', {
         {
             email: 'tester01@gmail.com',
             password: '123456',
-            nama: 'TESTER01',
+            nama: 'TESTER-01',
             isLoket: 0,
             isLogin: false
         },
         {
             email: 'tester02@gmail.com',
             password: '123456',
-            nama: 'TESTER02',
+            nama: 'TESTER-02',
             isLoket: 0,
             isLogin: false
         },
         {
             email: 'tester03@gmail.com',
             password: '123456',
-            nama: 'TESTER03',
+            nama: 'TESTER-03',
             isLoket: 0,
             isLogin: false
         }
-      ]
+      ],
+      dataLogin: {}
     }
   },
   getters: {
-
+    loginAdmin: (state) => {
+      return state.dataLogin
+    }
   },
   actions: {
-    btnLogin() {
-      console.log('Btn Login Clicked')
+    btnLogin(email, password) {
+      this.dataLogin = {
+        email: email,
+        password: password,
+        nama: '',
+        isLoket: 0,
+        isLogin: true
+      }
+
+      console.log(this.dataLogin, 'Btn Login Clicked')
     },
     btnAntrianSelanjutnya() {
       console.log('Btn Next Antrian Clicked')

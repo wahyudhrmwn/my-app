@@ -16,9 +16,9 @@ export const useStoreAntrian = defineStore('storeAntrian', {
         {
           id: '02',
           nomorAntrian: '02',
-          isActive: true,
+          isActive: false,
           isQueue: false,
-          isCompleted: false,
+          isCompleted: true,
           isLoket: 0
         },
         {
@@ -27,13 +27,53 @@ export const useStoreAntrian = defineStore('storeAntrian', {
           isActive: true,
           isQueue: false,
           isCompleted: false,
-          isLoket: 0
+          isLoket: 2
+        },
+        {
+          id: '04',
+          nomorAntrian: '04',
+          isActive: true,
+          isQueue: false,
+          isCompleted: false,
+          isLoket: 3
+        },
+        {
+          id: '05',
+          nomorAntrian: '05',
+          isActive: true,
+          isQueue: false,
+          isCompleted: false,
+          isLoket: 1
         },
         {
           id: '06',
           nomorAntrian: '06',
-          isActive: true,
-          isQueue: false,
+          isActive: false,
+          isQueue: true,
+          isCompleted: false,
+          isLoket: 0
+        },
+        {
+          id: '07',
+          nomorAntrian: '07',
+          isActive: false,
+          isQueue: true,
+          isCompleted: false,
+          isLoket: 0
+        },
+        {
+          id: '08',
+          nomorAntrian: '08',
+          isActive: false,
+          isQueue: true,
+          isCompleted: false,
+          isLoket: 0
+        },
+        {
+          id: '09',
+          nomorAntrian: '09',
+          isActive: false,
+          isQueue: true,
           isCompleted: false,
           isLoket: 0
         },
@@ -86,22 +126,15 @@ export const useStoreAntrian = defineStore('storeAntrian', {
           isLoket: 0
         },
         {
-          id: '20',
-          nomorAntrian: '20',
-          isActive: false,
-          isQueue: true,
-          isCompleted: false,
-          isLoket: 0
-        },
-        {
-          id: '21',
-          nomorAntrian: '21',
+          id: '16',
+          nomorAntrian: '16',
           isActive: false,
           isQueue: true,
           isCompleted: false,
           isLoket: 0
         }
-      ]
+      ],
+      antrianTerbesar: 0
     }
   },
   getters: {
@@ -113,7 +146,7 @@ export const useStoreAntrian = defineStore('storeAntrian', {
       return dataAktif
     },
     getAntrianAktifTerbesar: (state) => {
-      let AntrianTerbaru = "";
+      let AntrianTerbaru = ''
       const dataAktif = state.dataAntrian.filter((data) => data.isActive == true)
 
       let dataFilter = []
@@ -125,17 +158,24 @@ export const useStoreAntrian = defineStore('storeAntrian', {
       let max = Math.max(...dataFilter)
 
       // eslint-disable-next-line no-constant-condition
-      if(max == 1 || max == 2 || max == 3 || max == 4 || max == 5 ||
-        max == 6 || max == 7 || max == 8 || max == 9 ) {
-        max = '0' + max;
+      if (
+        max == 1 ||
+        max == 2 ||
+        max == 3 ||
+        max == 4 ||
+        max == 5 ||
+        max == 6 ||
+        max == 7 ||
+        max == 8 ||
+        max == 9
+      ) {
+        max = '0' + max
       } else {
         max
       }
 
-      console.log(max)
+      AntrianTerbaru = max.toString()
 
-      AntrianTerbaru = max.toString();
-      
       return AntrianTerbaru
     },
     getAllAntrianMenunggu: (state) => {
@@ -148,7 +188,7 @@ export const useStoreAntrian = defineStore('storeAntrian', {
       let dataFilter = []
 
       for (var i = 0; i < dataMenungguAkhir.length; i++) {
-        let lengthData = dataMenungguAkhir.length - 1 
+        let lengthData = dataMenungguAkhir.length - 1
         if (i === lengthData) {
           dataFilter.push(dataMenungguAkhir[i])
         }
@@ -161,7 +201,11 @@ export const useStoreAntrian = defineStore('storeAntrian', {
   },
   actions: {
     ambilAntrian() {
-      console.log('Ambil Antrian Clicked')
+      this.antrianTerbesar = this.getAntrianMenungguTerbesar
+      let nomorAntrianAnda = this.antrianTerbesar[0]
+      let localAntrian = localStorage.setItem('nomorAntrianAnda', JSON.stringify(nomorAntrianAnda))
+
+      return localAntrian
     },
     refresh() {
       console.log('Refresh clicked')

@@ -1,3 +1,4 @@
+import { useStoreAdmin } from '@/stores/storeAdmin';
 <template>
   <div class="container">
     <div class="box box-counter">
@@ -47,15 +48,61 @@
 </template>
 
 <script setup>
+import { useRouter } from 'vue-router';
+import { useStoreAdmin } from '@/stores/storeAdmin'
+// import { useStoreAntrian } from '@/stores/storeAntrian'
+
+const router = useRouter()
+const storeAdmin = useStoreAdmin()
+// const storeAntrian = useStoreAntrian()
 
 const counter = (loket) => {
-  if (loket === 'Loket 1') {
-    console.log('Loket 1 is Clicked')
-  } else if (loket === 'Loket 2') {
-    console.log('Loket 2 is Clicked')
-  } else {
-    console.log('Loket 3 is Clicked')
+  let login = storeAdmin.dataLogin
+  let dbAdmin = storeAdmin.dataAdmin
+  for (var i = 0; i < dbAdmin.length; i++) {
+    if (login.email === dbAdmin[i].email && login.password === dbAdmin[i].password) {
+      if (loket === 'Loket 1') {
+        storeAdmin.$patch((state) => {
+          state.dataLogin = {
+            email: dbAdmin[i].email,
+            password: dbAdmin[i].password,
+            nama: dbAdmin[i].nama,
+            isLoket: 1,
+            isLogin: true
+          }
+        })
+
+        router.replace('/admin')
+        console.log('Loket 1 is Clicked', 'storeAdmin.dataLogin Updated')
+      } else if (loket === 'Loket 2') {
+        storeAdmin.$patch((state) => {
+          state.dataLogin = {
+            email: dbAdmin[i].email,
+            password: dbAdmin[i].password,
+            nama: dbAdmin[i].nama,
+            isLoket: 2,
+            isLogin: true
+          }
+        })
+
+        router.replace('/admin')
+        console.log('Loket 2 is Clicked', 'storeAdmin.dataLogin Updated')
+      } else if (loket === 'Loket 3') {
+        storeAdmin.$patch((state) => {
+          state.dataLogin = {
+            email: dbAdmin[i].email,
+            password: dbAdmin[i].password,
+            nama: dbAdmin[i].nama,
+            isLoket: 3,
+            isLogin: true
+          }
+        })
+
+        router.replace('/admin')
+        console.log('Loket 3 is Clicked', 'storeAdmin.dataLogin Updated')
+      }
     }
+  }
 }
 </script>
 
