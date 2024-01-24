@@ -8,18 +8,18 @@ export const useStoreAntrian = defineStore('storeAntrian', {
         {
           id: '01',
           nomorAntrian: '01',
-          isActive: false,
+          isActive: true,
           isQueue: false,
-          isCompleted: true,
-          isLoket: 0
+          isCompleted: false,
+          isLoket: 3
         },
         {
           id: '02',
           nomorAntrian: '02',
-          isActive: false,
+          isActive: true,
           isQueue: false,
-          isCompleted: true,
-          isLoket: 0
+          isCompleted: false,
+          isLoket: 1
         },
         {
           id: '03',
@@ -32,18 +32,18 @@ export const useStoreAntrian = defineStore('storeAntrian', {
         {
           id: '04',
           nomorAntrian: '04',
-          isActive: true,
-          isQueue: false,
+          isActive: false,
+          isQueue: true,
           isCompleted: false,
-          isLoket: 3
+          isLoket: 0
         },
         {
           id: '05',
           nomorAntrian: '05',
-          isActive: true,
-          isQueue: false,
+          isActive: false,
+          isQueue: true,
           isCompleted: false,
-          isLoket: 1
+          isLoket: 0
         },
         {
           id: '06',
@@ -132,6 +132,38 @@ export const useStoreAntrian = defineStore('storeAntrian', {
           isQueue: true,
           isCompleted: false,
           isLoket: 0
+        },
+        {
+          id: '17',
+          nomorAntrian: '17',
+          isActive: false,
+          isQueue: true,
+          isCompleted: false,
+          isLoket: 0
+        },
+        {
+          id: '18',
+          nomorAntrian: '18',
+          isActive: false,
+          isQueue: true,
+          isCompleted: false,
+          isLoket: 0
+        },
+        {
+          id: '19',
+          nomorAntrian: '19',
+          isActive: false,
+          isQueue: true,
+          isCompleted: false,
+          isLoket: 0
+        },
+        {
+          id: '20',
+          nomorAntrian: '20',
+          isActive: false,
+          isQueue: true,
+          isCompleted: false,
+          isLoket: 0
         }
       ],
       antrianTerbesar: 0
@@ -195,8 +227,24 @@ export const useStoreAntrian = defineStore('storeAntrian', {
       }
 
       dataMenungguAkhir = dataFilter
+      
 
       return dataMenungguAkhir
+    },
+    getAntrianMenungguPertama: (state) => {
+      let dataMenungguPertama = state.getAllAntrianMenunggu.filter((data) => data)
+      let dataFilter = []
+
+      for (var i = 0; i < dataMenungguPertama.length; i++) {
+        let lengthData = 0
+        if (i === lengthData) {
+          dataFilter.push(dataMenungguPertama[i])
+        }
+      }
+
+      dataMenungguPertama = dataFilter
+
+      return dataMenungguPertama
     }
   },
   actions: {

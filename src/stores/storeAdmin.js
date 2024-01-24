@@ -1,4 +1,7 @@
 import { defineStore } from 'pinia'
+// import { useStoreAntrian } from './storeAntrian'
+
+// const storeAntrian = useStoreAntrian()
 
 export const useStoreAdmin = defineStore('storeAdmin', {
   // arrow function recommended for full type inference
@@ -48,6 +51,7 @@ export const useStoreAdmin = defineStore('storeAdmin', {
       console.log(this.dataLogin, 'Btn Login Clicked')
     },
     btnAntrianSelanjutnya() {
+      // const dataSebelum = storeAntrian.
       console.log('Btn Next Antrian Clicked')
     },
     btnResetAntrian() {

@@ -59,25 +59,37 @@
       <div class="columns columns2">
         <div class="column is-one-thirds column1-row2">
           <div class="box box1-row2-column1">LOKET 1</div>
-          <div class="box box2-row2-column1">{{ loket1 === true ? adminLogin.nama : 'ADMIN' }}</div>
-          <div class="box box3-row2-column1">19</div>
-          <div v-if="loket1 === true" class="box box4-row2-column1" @click="storeAdmin.btnAntrianSelanjutnya">
+          <div class="box box2-row2-column1">{{ loket1 === true ? adminLogin.nama : 'ADMIN 1' }}</div>
+          <div class="box box3-row2-column1">{{ antrianLoket1 }}</div>
+          <div
+            v-if="loket1 === true"
+            class="box box4-row2-column1"
+            @click="btnAntrianSelanjutnya('Loket 1')"
+          >
             Antrian Selanjutnya
           </div>
         </div>
         <div class="column is-one-thirds column2-row2">
           <div class="box box1-row2-column1">LOKET 2</div>
-          <div class="box box2-row2-column1">{{ loket2 === true ? adminLogin.nama : 'ADMIN' }}</div>
-          <div class="box box3-row2-column1">20</div>
-          <div v-if="loket2 === true" class="box box4-row2-column1" @click="storeAdmin.btnAntrianSelanjutnya">
+          <div class="box box2-row2-column1">{{ loket2 === true ? adminLogin.nama : 'ADMIN 2' }}</div>
+          <div class="box box3-row2-column1">{{ antrianLoket2 }}</div>
+          <div
+            v-if="loket2 === true"
+            class="box box4-row2-column1"
+            @click="btnAntrianSelanjutnya('Loket 2')"
+          >
             Antrian Selanjutnya
           </div>
         </div>
         <div class="column is-one-thirds column3-row2">
           <div class="box box1-row2-column1">LOKET 3</div>
-          <div class="box box2-row2-column1">{{ loket3 === true ? adminLogin.nama : 'ADMIN' }}</div>
-          <div class="box box3-row2-column1">18</div>
-          <div v-if="loket3 === true" class="box box4-row2-column1" @click="storeAdmin.btnAntrianSelanjutnya">
+          <div class="box box2-row2-column1">{{ loket3 === true ? adminLogin.nama : 'ADMIN 3' }}</div>
+          <div class="box box3-row2-column1">{{ antrianLoket3 }}</div>
+          <div
+            v-if="loket3 === true"
+            class="box box4-row2-column1"
+            @click="btnAntrianSelanjutnya('Loket 3')"
+          >
             Antrian Selanjutnya
           </div>
         </div>
@@ -87,18 +99,9 @@
     <div class="row3">
       <div class="columns columns3">
         <div class="column is-one-quarter nextQueue">Antrian yang sedang menunggu</div>
-        <div class="column queue">
-          <div class="box box-queue">21</div>
+        <div class="column queue" v-for="(antrian, index) in listAntrianMenunggu" :key="index">
+          <div class="box box-queue" v-if="index <= 10 && antrian.isQueue === true">{{ antrian.nomorAntrian }}</div>
         </div>
-        <div class="column queue"><div class="box box-queue">22</div></div>
-        <div class="column queue"><div class="box box-queue">23</div></div>
-        <div class="column queue"><div class="box box-queue">24</div></div>
-        <div class="column queue"><div class="box box-queue">25</div></div>
-        <div class="column queue"><div class="box box-queue">26</div></div>
-        <div class="column queue"><div class="box box-queue">27</div></div>
-        <div class="column queue"><div class="box box-queue">28</div></div>
-        <div class="column queue"><div class="box box-queue">29</div></div>
-        <div class="column queue"><div class="box box-queue">30</div></div>
       </div>
     </div>
   </div>
@@ -106,16 +109,17 @@
 
 <script setup>
 import { useStoreAdmin } from '@/stores/storeAdmin'
-import { onMounted, ref } from 'vue'
-// import { useStoreAntrian } from '@/stores/storeAntrian';
+import { onMounted, ref, computed, reactive } from 'vue'
+import { useStoreAntrian } from '@/stores/storeAntrian'
 
-// const storeAntrian = useStoreAntrian()
+const storeAntrian = useStoreAntrian()
 const storeAdmin = useStoreAdmin()
 
 let adminLogin = ref({})
 let loket1 = ref(false)
 let loket2 = ref(false)
 let loket3 = ref(false)
+let listAntrianMenunggu = reactive([])
 
 onMounted(() => {
   adminLogin.value = storeAdmin.loginAdmin
@@ -133,7 +137,114 @@ onMounted(() => {
     loket2.value = false
     loket3.value = true
   }
+
+  listAntrianMenunggu = storeAntrian.getAllAntrianMenunggu.slice(0,10)
+
 })
+
+
+
+
+let AntrianAktif = reactive(storeAntrian.getAllAntrianAktif)
+// let AntrianMenunggu = reactive(storeAntrian.getAllAntrianMenunggu)
+
+const antrianLoket1 = computed(() => {
+  let data = ''
+  for (var i = 0; i < AntrianAktif.length; i++) {
+    if (AntrianAktif[i].isLoket === 1) {
+      data = AntrianAktif[i].nomorAntrian
+    }
+  }
+  return data
+})
+
+const antrianLoket2 = computed(() => {
+  let data = ''
+  for (var i = 0; i < AntrianAktif.length; i++) {
+    if (AntrianAktif[i].isLoket === 2) {
+      data = AntrianAktif[i].nomorAntrian
+    }
+  }
+  return data
+})
+
+const antrianLoket3 = computed(() => {
+  let data = ''
+  for (var i = 0; i < AntrianAktif.length; i++) {
+    if (AntrianAktif[i].isLoket === 3) {
+      data = AntrianAktif[i].nomorAntrian
+    }
+  }
+  return data
+})
+
+const btnAntrianSelanjutnya = (isLoket) => {
+  storeAdmin.btnAntrianSelanjutnya()
+  console.log(isLoket)
+  // if (isLoket === 'Loket 1') {
+  //   const dataAntrianAktif = storeAntrian.getAllAntrianAktif
+  //   const dataAntrianMenungguPertama = storeAntrian.getAntrianMenungguPertama
+
+  //   let antrianBefore = {}
+  //   let antrianNext = {}
+
+  //   for (let i = 0; i < dataAntrianAktif.length; i++) {
+  //     if (dataAntrianAktif[i].isLoket === 1) {
+  //       antrianBefore = {
+  //         id: '05',
+  //         nomorAntrian: '05',
+  //         isActive: true,
+  //         isQueue: false,
+  //         isCompleted: false,
+  //         isLoket: 1
+  //       }
+  //     }
+  //   }
+
+  //   antrianNext = {
+  //     id: dataAntrianMenungguPertama[0].id,
+  //     nomorAntrian: dataAntrianMenungguPertama[0].nomorAntrian,
+  //     isActive: true,
+  //     isQueue: false,
+  //     isCompleted: false,
+  //     isLoket: 1
+  //   }
+
+  //   storeAntrian.$patch((state) => {
+  //     let data = state.dataAntrian
+  //     for (var i = 0; i < data.length; i++) {
+  //       if (antrianBefore.id === data[i].id) {
+  //         data[i].id,
+  //           data[i].nomorAntrian,
+  //           (data[i].isActive = false),
+  //           (data[i].isQueue = false),
+  //           (data[i].isCompleted = true),
+  //           (data[i].isLoket = 0)
+  //       }
+
+  //       if (antrianNext.id === data[i].id) {
+  //         data[i].id,
+  //           data[i].nomorAntrian,
+  //           (data[i].isActive = true),
+  //           (data[i].isQueue = false),
+  //           (data[i].isCompleted = false),
+  //           (data[i].isLoket = 1)
+  //       }
+  //     }
+  //   })
+
+  //   AntrianAktif = storeAntrian.getAllAntrianAktif
+  //   AntrianMenunggu = storeAntrian.getAllAntrianMenunggu
+
+  //   listAntrianMenunggu.value = AntrianMenunggu
+  // } else if (isLoket === 'Loket 2') {
+  //   //do something
+  // } else {
+  //   //do something
+  // }
+
+  // console.log(isLoket, storeBtn)
+}
 </script>
 
 <style scoped>
@@ -348,6 +459,7 @@ onMounted(() => {
     background-color: #0d42ff;
     font-weight: bold;
     color: #dfeffa;
+    cursor: pointer;
   }
 
   .column1-row2 {
@@ -604,6 +716,7 @@ onMounted(() => {
     background-color: #0d42ff;
     font-weight: bold;
     color: #dfeffa;
+    cursor: pointer;
   }
 
   .column1-row2 {
