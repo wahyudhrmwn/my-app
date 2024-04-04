@@ -50,59 +50,79 @@ import { useStoreAdmin } from '@/stores/storeAdmin';
 <script setup>
 import { useRouter } from 'vue-router';
 import { useStoreAdmin } from '@/stores/storeAdmin'
+import { onMounted, watchEffect } from 'vue';
+import { useStoreAuth } from '@/stores/storeAuth';
 // import { useStoreAntrian } from '@/stores/storeAntrian'
 
 const router = useRouter()
 const storeAdmin = useStoreAdmin()
+const storeAuth = useStoreAuth()
 // const storeAntrian = useStoreAntrian()
 
+onMounted(() => {
+  storeAdmin.getAllAdmin()
+})
+
+let login = JSON.parse(localStorage.getItem('isUserLogin'))
+let dbAdmin = []
+
+watchEffect(() => {
+  if(storeAdmin.allAdmin.length > 0) {
+    dbAdmin = storeAdmin.allAdmin
+  }
+})
+
 const counter = (loket) => {
-  let login = storeAdmin.dataLogin
-  let dbAdmin = storeAdmin.dataAdmin
-  for (var i = 0; i < dbAdmin.length; i++) {
-    if (login.email === dbAdmin[i].email && login.password === dbAdmin[i].password) {
+
+  for (var i = 0; i < dbAdmin[0].length; i++) {
+    if (login[0].email === dbAdmin[0][i].email && login[0].password === dbAdmin[0][i].password) {
       if (loket === 'Loket 1') {
         storeAdmin.$patch((state) => {
-          state.dataLogin = {
-            email: dbAdmin[i].email,
-            password: dbAdmin[i].password,
-            nama: dbAdmin[i].nama,
+          state.allAdmin[0][i] = {
+            id: dbAdmin[0][i].id,
+            email: dbAdmin[0][i].email,
+            password: dbAdmin[0][i].password,
+            nama: dbAdmin[0][i].nama,
             isLoket: 1,
-            isLogin: true
+            isLogin: dbAdmin[0][i].isLogin
           }
         })
-
         router.replace('/admin')
-        console.log('Loket 1 is Clicked', 'storeAdmin.dataLogin Updated')
+        localStorage.setItem('isUserLogin', JSON.stringify(storeAdmin.allAdmin[0][i]))
+        storeAuth.updateStatusLogin([storeAdmin.allAdmin[0][i]])
       } else if (loket === 'Loket 2') {
         storeAdmin.$patch((state) => {
-          state.dataLogin = {
-            email: dbAdmin[i].email,
-            password: dbAdmin[i].password,
-            nama: dbAdmin[i].nama,
+          state.allAdmin[0][i] = {
+            id: dbAdmin[0][i].id,
+            email: dbAdmin[0][i].email,
+            password: dbAdmin[0][i].password,
+            nama: dbAdmin[0][i].nama,
             isLoket: 2,
-            isLogin: true
+            isLogin: dbAdmin[0][i].isLogin
           }
         })
-
         router.replace('/admin')
-        console.log('Loket 2 is Clicked', 'storeAdmin.dataLogin Updated')
+        localStorage.setItem('isUserLogin', JSON.stringify(storeAdmin.allAdmin[0][i]))
+        storeAuth.updateStatusLogin([storeAdmin.allAdmin[0][i]])
       } else if (loket === 'Loket 3') {
         storeAdmin.$patch((state) => {
-          state.dataLogin = {
-            email: dbAdmin[i].email,
-            password: dbAdmin[i].password,
-            nama: dbAdmin[i].nama,
+          state.allAdmin[0][i] = {
+            id: dbAdmin[0][i].id,
+            email: dbAdmin[0][i].email,
+            password: dbAdmin[0][i].password,
+            nama: dbAdmin[0][i].nama,
             isLoket: 3,
-            isLogin: true
+            isLogin: dbAdmin[0][i].isLogin
           }
         })
-
         router.replace('/admin')
-        console.log('Loket 3 is Clicked', 'storeAdmin.dataLogin Updated')
+        localStorage.setItem('isUserLogin', JSON.stringify(storeAdmin.allAdmin[0][i]))
+        storeAuth.updateStatusLogin([storeAdmin.allAdmin[0][i]])
       }
     }
   }
+
+  
 }
 </script>
 

@@ -1,64 +1,61 @@
+// import router from '@/router'
 import { defineStore } from 'pinia'
-// import { useStoreAntrian } from './storeAntrian'
 
-// const storeAntrian = useStoreAntrian()
+import { db } from '@/js/firebase'
+import { collection, onSnapshot, deleteDoc, doc, setDoc } from "firebase/firestore";
+import { useStoreAntrian } from './storeAntrian';
 
 export const useStoreAdmin = defineStore('storeAdmin', {
-  // arrow function recommended for full type inference
   state: () => {
     return {
-      dataAdmin: [
-        {
-            email: 'tester01@gmail.com',
-            password: '123456',
-            nama: 'TESTER-01',
-            isLoket: 0,
-            isLogin: false
-        },
-        {
-            email: 'tester02@gmail.com',
-            password: '123456',
-            nama: 'TESTER-02',
-            isLoket: 0,
-            isLogin: false
-        },
-        {
-            email: 'tester03@gmail.com',
-            password: '123456',
-            nama: 'TESTER-03',
-            isLoket: 0,
-            isLogin: false
-        }
-      ],
-      dataLogin: {}
-    }
-  },
-  getters: {
-    loginAdmin: (state) => {
-      return state.dataLogin
+      allAdmin: [],
+      dataLogin: [],
+      LoginError: false
     }
   },
   actions: {
-    btnLogin(email, password) {
-      this.dataLogin = {
-        email: email,
-        password: password,
-        nama: '',
-        isLoket: 0,
-        isLogin: true
-      }
+    getAllAdmin() {
+      onSnapshot(collection(db, 'admin'), (querySnapshot) => {
+        let data = []
+        querySnapshot.forEach((doc) => {
+          let adminLogin = {
+            id: doc.data().id,
+            email: doc.data().email,
+            password: doc.data().password,
+            nama: doc.data().nama,
+            isLoket: doc.data().isLoket,
+            isLogin: doc.data().isLogin
+          }
+          data.push(adminLogin)
+        })
 
-      console.log(this.dataLogin, 'Btn Login Clicked')
+        this.allAdmin.push(data)
+      })
     },
-    btnAntrianSelanjutnya() {
-      // const dataSebelum = storeAntrian.
-      console.log('Btn Next Antrian Clicked')
-    },
-    btnResetAntrian() {
-      console.log('Btn Reset Antrian Clicked')
-    },
-    btnLogout() {
-      console.log('Btn Logout Clicked')
+    async resetAntrian() {
+      let confirmed = confirm("Apakah anda yakin ingin Reset Antrian?");
+  
+        if (confirmed) {
+          const storeAntrian = useStoreAntrian()
+
+          let dataAntrian = storeAntrian.dataAntrian
+
+          for (var i = 0; i < dataAntrian.length; i++) {
+            await deleteDoc(doc(db, "dataAntrian", dataAntrian[i].id));
+          }
+
+          await setDoc(doc(collection(db, 'dataAntrian'), '0'), {
+            id: '0',
+            isActive: true,
+            isCompleted: false,
+            isLoket: 1,
+            isQueue: false,
+            nomorAntrian: '0'
+          })
+          
+        } else {
+          alert("You clicked Cancel!");
+        }
     }
   }
 })

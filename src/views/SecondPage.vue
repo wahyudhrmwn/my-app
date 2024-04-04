@@ -3,7 +3,7 @@
     <div class="box box1-sp">
       <div class="box box1-1-sp">
         <div class="nomorAnda-sp">Nomor Antrian Anda</div>
-        <div class="angkaAntrian-sp">{{ nomorAntrianAnda[0].nomorAntrian }}</div>
+        <div class="angkaAntrian-sp">{{ localAntrian.nomorAntrian }}</div>
       </div>
     </div>
     <div class="box box2-sp">
@@ -19,65 +19,87 @@
         <div class="nomorAntrian-sp">{{ list.nomorAntrian }}</div>
         <div class="nomorLoket-sp">Ke Loket {{ list.isLoket }}</div>
       </div>
-
-      <!-- <div class="box box2-2-sp">
-                <div class="textAntrian-sp">
-                    ANTRIAN
-                </div>
-                <div class="nomorAntrian-sp">{{ listAntrian[1].nomorAntrian }}</div>
-                <div class="nomorLoket-sp">Ke Loket 2</div>
-            </div>
-
-            <div class="box box2-3-sp">
-                <div class="textAntrian-sp">
-                    ANTRIAN
-                </div>
-                <div class="nomorAntrian-sp">{{ listAntrian[2].nomorAntrian }}</div>
-                <div class="nomorLoket-sp">Ke Loket 3</div>
-            </div> -->
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed, reactive } from 'vue'
+import { onMounted, ref, watchEffect } from 'vue'
 import { useStoreAntrian } from '@/stores/storeAntrian'
+import router from '@/router'
 
 const storeAntrian = useStoreAntrian()
 
-const localAntrian = JSON.parse(localStorage.getItem('nomorAntrianAnda'))
-
-let listAntrian = reactive([])
-
-const dataAntrian = computed(() => {
-  listAntrian = storeAntrian.getAllAntrianAktif
-  return listAntrian
+onMounted(() => {
+  storeAntrian.getAllAntrian()
 })
 
-const nomorAntrianAnda = computed(() => {
-  let antrianAnda = []
-  let nomorAnda = {}
-  if (
-    localAntrian.isActive === false &&
-    localAntrian.isCompleted === false &&
-    localAntrian.isQueue === true
-  ) {
-    nomorAnda.nomorAntrian = parseInt(localAntrian.nomorAntrian) + 1
-    nomorAnda.id = parseInt(localAntrian.id) + 1
-    nomorAnda.isActive = false
-    nomorAnda.isQueue = true
-    nomorAnda.isCompleted = false
-    nomorAnda.isLoket = 0
+const localAntrian = ref(JSON.parse(localStorage.getItem('nomorAntrianAnda')))
 
-    storeAntrian.$patch((state) => {
-      state.dataAntrian.push(nomorAnda)
-    })
+const dataAntrian = ref([
+  {
+    id: '',
+    isActive: false,
+    isCompleted: false,
+    isLoket: 0,
+    isQueue: false,
+    nomorAntrian: ''
+  }
+])
 
-    antrianAnda.push(nomorAnda)
+const dataAllAntrian = ref([])
+
+const updateDataLokal = () => {
+  let isComplete = false
+  let dataRealtime = dataAllAntrian.value
+  for (var i = 0; i < dataRealtime.length; i++) {
+    if (dataRealtime[i].id === localAntrian.value.id) {
+      if (dataRealtime[i].isCompleted === true) {
+        isComplete = true
+      }
+    }
   }
 
-  return antrianAnda
+  if(isComplete) {
+    localStorage.removeItem("nomorAntrianAnda");
+    router.push('/')
+  }
+}
+
+watchEffect(() => {
+  if (storeAntrian.dataAntrian.length > 0) {
+    dataAntrian.value = storeAntrian.dataAntrian.filter((data) => data.isActive === true)
+    dataAllAntrian.value = storeAntrian.dataAntrian
+    updateDataLokal()
+  }
 })
+
+
+
+// const nomorAntrianAnda = computed(() => {
+//   let antrianAnda = []
+//   let nomorAnda = {}
+//   if (
+//     localAntrian.isActive === false &&
+//     localAntrian.isCompleted === false &&
+//     localAntrian.isQueue === true
+//   ) {
+//     nomorAnda.nomorAntrian = parseInt(localAntrian.nomorAntrian)
+//     nomorAnda.id = parseInt(localAntrian.id)
+//     nomorAnda.isActive = false
+//     nomorAnda.isQueue = true
+//     nomorAnda.isCompleted = false
+//     nomorAnda.isLoket = 0
+
+//     storeAntrian.$patch((state) => {
+//       state.dataAntrian.push(nomorAnda)
+//     })
+
+//     antrianAnda.push(nomorAnda)
+//   }
+
+//   return antrianAnda
+// })
 </script>
 
 <style scoped>
@@ -117,7 +139,7 @@ const nomorAntrianAnda = computed(() => {
 .box2-sp {
   margin: auto;
   width: 30%;
-  height: 900px;
+  height: fit-content;
   margin-bottom: 20px;
   border-radius: 15px;
   background-color: #2a2f4f;
@@ -221,7 +243,7 @@ const nomorAntrianAnda = computed(() => {
   .box2-sp {
     margin: auto;
     width: 80%;
-    height: 720px;
+    height: fit-content;
     margin-bottom: 20px;
     border-radius: 15px;
     background-color: #2a2f4f;
@@ -294,7 +316,7 @@ const nomorAntrianAnda = computed(() => {
   .box2-sp {
     margin: auto;
     width: 80%;
-    height: 720px;
+    height: fit-content;
     margin-bottom: 20px;
     border-radius: 15px;
     background-color: #2a2f4f;
@@ -367,7 +389,7 @@ const nomorAntrianAnda = computed(() => {
   .box2-sp {
     margin: auto;
     width: 70%;
-    height: 900px;
+    height: fit-content;
     margin-bottom: 20px;
     border-radius: 15px;
     background-color: #2a2f4f;
@@ -436,7 +458,7 @@ const nomorAntrianAnda = computed(() => {
   .box2-sp {
     margin: auto;
     width: 60%;
-    height: 900px;
+    height: fit-content;
     margin-bottom: 20px;
     border-radius: 15px;
     background-color: #2a2f4f;
@@ -505,7 +527,7 @@ const nomorAntrianAnda = computed(() => {
   .box2-sp {
     margin: auto;
     width: 60%;
-    height: 900px;
+    height: fit-content;
     margin-bottom: 20px;
     border-radius: 15px;
     background-color: #2a2f4f;
@@ -574,7 +596,7 @@ const nomorAntrianAnda = computed(() => {
   .box2-sp {
     margin: auto;
     width: 50%;
-    height: 900px;
+    height: fit-content;
     margin-bottom: 20px;
     border-radius: 15px;
     background-color: #2a2f4f;
@@ -643,7 +665,7 @@ const nomorAntrianAnda = computed(() => {
   .box2-sp {
     margin: auto;
     width: 40%;
-    height: 900px;
+    height: fit-content;
     margin-bottom: 20px;
     border-radius: 15px;
     background-color: #2a2f4f;
@@ -712,7 +734,7 @@ const nomorAntrianAnda = computed(() => {
   .box2-sp {
     margin: auto;
     width: 40%;
-    height: 900px;
+    height: fit-content;
     margin-bottom: 20px;
     border-radius: 15px;
     background-color: #2a2f4f;
@@ -781,7 +803,7 @@ const nomorAntrianAnda = computed(() => {
   .box2-sp {
     margin: auto;
     width: 40%;
-    height: 900px;
+    height: fit-content;
     margin-bottom: 20px;
     border-radius: 15px;
     background-color: #2a2f4f;
@@ -850,7 +872,7 @@ const nomorAntrianAnda = computed(() => {
   .box2-sp {
     margin: auto;
     width: 40%;
-    height: 900px;
+    height: fit-content;
     margin-bottom: 20px;
     border-radius: 15px;
     background-color: #2a2f4f;
@@ -919,7 +941,7 @@ const nomorAntrianAnda = computed(() => {
   .box2-sp {
     margin: auto;
     width: 40%;
-    height: 900px;
+    height: fit-content;
     margin-bottom: 20px;
     border-radius: 15px;
     background-color: #2a2f4f;
