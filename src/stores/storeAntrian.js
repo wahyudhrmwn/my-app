@@ -55,7 +55,7 @@ export const useStoreAntrian = defineStore('storeAntrian', {
       router.replace('/second')
     },
     refresh() {
-      console.log('Refresh clicked')
+      router.go('/second')
     },
     async getAllAntrianAktif() {
       this.antrianAktif = []

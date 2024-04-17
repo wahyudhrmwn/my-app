@@ -4,6 +4,7 @@ import { defineStore } from 'pinia'
 import { db } from '@/js/firebase'
 import { collection, onSnapshot, deleteDoc, doc, setDoc } from "firebase/firestore";
 import { useStoreAntrian } from './storeAntrian';
+import router from '@/router';
 
 export const useStoreAdmin = defineStore('storeAdmin', {
   state: () => {
@@ -52,6 +53,8 @@ export const useStoreAdmin = defineStore('storeAdmin', {
             isQueue: false,
             nomorAntrian: '0'
           })
+
+          router.push('/admin')
           
         } else {
           alert("You clicked Cancel!");

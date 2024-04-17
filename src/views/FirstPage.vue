@@ -41,13 +41,6 @@ const router = useRouter()
 
 onMounted(() => {
   storeAntrian.getAllAntrian()
-
-  let localData = JSON.parse(localStorage.getItem('nomorAntrianAnda'))
-  if (localData !== null && localData.isCompleted === false) {
-    router.replace('/second')
-  } else {
-    router.replace('/')
-  }
 })
 
 const btnAmbilAntrian = () => {
@@ -60,6 +53,27 @@ watchEffect(() => {
   if (storeAntrian.dataAntrian.length > 0) {
     let dataQueue = storeAntrian.dataAntrian.filter((data) => data.isQueue === true)
     let dataAktif = storeAntrian.dataAntrian.filter((data) => data.isActive === true)
+    let allData = storeAntrian.dataAntrian
+    let localData = JSON.parse(localStorage.getItem('nomorAntrianAnda'))
+    let dataLocalError = true
+
+    if(localData !== null) {
+      for (var z = 0; z < allData.length; z++) {
+      if (localData.nomorAntrian === allData[z].nomorAntrian) {
+        dataLocalError = false
+        if (allData[z].isCompleted === true) {
+          localStorage.removeItem('nomorAntrianAnda')
+        } else {
+          router.replace('/second')
+        }
+      }
+    }
+    
+    if(dataLocalError) {
+        localStorage.removeItem('nomorAntrianAnda')
+      }
+    }
+    
 
     if (dataQueue.length === 0 && dataAktif.length === 0) {
       nomorAnda.value = {
@@ -1141,11 +1155,7 @@ watchEffect(() => {
     linear-gradient(#fff 20px, transparent 0);
   background-repeat: no-repeat;
   background-size: 20px auto;
-  background-position:
-    0 0,
-    40px 0,
-    80px 0,
-    120px 0;
+  background-position: 0 0, 40px 0, 80px 0, 120px 0;
   animation: pgfill 1s linear infinite;
 }
 
