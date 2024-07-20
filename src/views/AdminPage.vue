@@ -58,7 +58,7 @@
     <div class="row2">
       <div class="columns columns2">
         <div class="column is-one-thirds column1-row2">
-          <div class="box box1-row2-column1">LOKET 1</div>
+          <div class="box box1-row2-column1">LOKET 1 {{ loketAdmin.type === 'Pembayaran' ? 'Pembayaran Unpam' : loketAdmin.type }}</div>
           <div class="box box2-row2-column1">
             {{ admin1.isLogin === true ? admin1.nama : 'CLOSE' }}
           </div>
@@ -66,7 +66,7 @@
             {{ loket1Off === true ? 'X' : antrian1.nomorAntrian }}
           </div>
           <div
-            v-if="adminLogin.isLoket === 1"
+            v-if="adminLogin.isLoket === 1 && firstTenData.length !== 0"
             class="box box4-row2-column1"
             @click="btnAntrianSelanjutnya(1)"
           >
@@ -74,7 +74,7 @@
           </div>
         </div>
         <div class="column is-one-thirds column2-row2">
-          <div class="box box1-row2-column1">LOKET 2</div>
+          <div class="box box1-row2-column1">LOKET 2 {{ loketAdmin.type === 'Pembayaran' ? 'Pembayaran Unpam' : loketAdmin.type }}</div>
           <div class="box box2-row2-column1">
             {{ admin2.isLogin === true ? admin2.nama : 'CLOSE' }}
           </div>
@@ -82,7 +82,7 @@
             {{ loket2Off === true ? 'X' : antrian2.nomorAntrian }}
           </div>
           <div
-            v-if="adminLogin.isLoket === 2"
+            v-if="adminLogin.isLoket === 2 && firstTenData.length !== 0"
             class="box box4-row2-column1"
             @click="btnAntrianSelanjutnya(2)"
           >
@@ -90,7 +90,9 @@
           </div>
         </div>
         <div class="column is-one-thirds column3-row2">
-          <div class="box box1-row2-column1">LOKET 3</div>
+          <div class="box box1-row2-column1">
+            LOKET 3 {{ loketAdmin.type === 'Pembayaran' ? 'Pembayaran Unpam' : loketAdmin.type }}
+          </div>
           <div class="box box2-row2-column1">
             {{ admin3.isLogin === true ? admin3.nama : 'CLOSE' }}
           </div>
@@ -98,7 +100,7 @@
             {{ loket3Off === true ? 'X' : antrian3.nomorAntrian }}
           </div>
           <div
-            v-if="adminLogin.isLoket === 3"
+            v-if="adminLogin.isLoket === 3 && firstTenData.length !== 0"
             class="box box4-row2-column1"
             @click="btnAntrianSelanjutnya(3)"
           >
@@ -138,6 +140,7 @@ let allAdminLogin = ref([])
 let antrianAktif = ref([])
 let antrianMenunggu = ref([])
 let adminLogin = JSON.parse(localStorage.getItem('isUserLogin'))
+let loketAdmin = JSON.parse(localStorage.getItem('jenisLoket'))
 
 const weekday = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu']
 const currentDate = new Date()
@@ -201,7 +204,7 @@ const btnAntrianSelanjutnya = (isLoket) => {
         isCompleted: true,
         isLoket: 0
       })
-      
+
       let antrianSebelumnya = {
         id: dataSebelum[i].id,
         isActive: false,
@@ -215,32 +218,26 @@ const btnAntrianSelanjutnya = (isLoket) => {
     }
   }
 
-  if(antrianAktif.value.length === 0 && antrianMenunggu.value.length === 0) {
+  if (antrianAktif.value.length === 0 && antrianMenunggu.value.length === 0) {
     storeAdmin.resetAntrian()
   } else {
     updateAntrianBaru(isLoket)
   }
-
-  
 }
 
 const updateAntrianBaru = (isLoket) => {
-
   let antrianSelanjutnya = dataMenunggu.value[0]
 
   if (antrianSelanjutnya.isQueue === true && antrianSelanjutnya.isLoket === 0) {
     updateDoc(doc(collection(db, 'dataAntrian'), antrianSelanjutnya.id), {
-        id: antrianSelanjutnya.id,
-        nomorAntrian: antrianSelanjutnya.nomorAntrian,
-        isActive: true,
-        isQueue: false,
-        isCompleted: false,
-        isLoket: isLoket
-      })
+      id: antrianSelanjutnya.id,
+      nomorAntrian: antrianSelanjutnya.nomorAntrian,
+      isActive: true,
+      isQueue: false,
+      isCompleted: false,
+      isLoket: isLoket
+    })
   }
-
-  
-
 }
 
 const mappingDataAktif = () => {

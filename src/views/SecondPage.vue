@@ -18,6 +18,7 @@
         <div class="textAntrian-sp">ANTRIAN</div>
         <div class="nomorAntrian-sp">{{ list.nomorAntrian }}</div>
         <div class="nomorLoket-sp">Ke Loket {{ list.isLoket }}</div>
+        <div class="jenisLoket-sp">{{ loketAntrian.type === 'Pembayaran' ? 'Pembayaran Unpam' : loketAntrian.type }}</div>
       </div>
     </div>
   </div>
@@ -35,6 +36,7 @@ onMounted(() => {
 })
 
 const localAntrian = ref(JSON.parse(localStorage.getItem('nomorAntrianAnda')))
+const loketAntrian = ref(JSON.parse(localStorage.getItem('jenisAntrian')))
 
 const dataAntrian = ref([
   {
@@ -149,7 +151,7 @@ watchEffect(() => {
 .box2-2-sp,
 .box2-3-sp {
   margin: 10px;
-  height: 240px;
+  height: 280px;
   border-radius: 15px;
   text-align: center;
 }
@@ -193,6 +195,11 @@ watchEffect(() => {
 }
 
 .nomorLoket-sp {
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.jenisLoket-sp {
   font-size: 30px;
   font-weight: bold;
 }
@@ -253,7 +260,7 @@ watchEffect(() => {
   .box2-2-sp,
   .box2-3-sp {
     margin: 10px;
-    height: 180px;
+    height: 220px;
     border-radius: 15px;
     text-align: center;
     margin-bottom: 20px;
@@ -277,6 +284,11 @@ watchEffect(() => {
 
   .box2-refresh-sp {
     margin-bottom: 20px;
+  }
+
+  .jenisLoket-sp {
+    font-size: 20px;
+    font-weight: bold;
   }
 }
 
@@ -326,7 +338,7 @@ watchEffect(() => {
   .box2-2-sp,
   .box2-3-sp {
     margin: 10px;
-    height: 180px;
+    height: 220px;
     border-radius: 15px;
     text-align: center;
     margin-bottom: 20px;
@@ -350,6 +362,11 @@ watchEffect(() => {
 
   .box2-refresh-sp {
     margin-bottom: 20px;
+  }
+
+  .jenisLoket-sp {
+    font-size: 20px;
+    font-weight: bold;
   }
 }
 
@@ -399,7 +416,7 @@ watchEffect(() => {
   .box2-2-sp,
   .box2-3-sp {
     margin: 10px;
-    height: 240px;
+    height: 280px;
     border-radius: 15px;
     text-align: center;
     margin-bottom: 20px;
@@ -417,6 +434,11 @@ watchEffect(() => {
   }
 
   .nomorLoket-sp {
+    font-size: 30px;
+    font-weight: bold;
+  }
+
+  .jenisLoket-sp {
     font-size: 30px;
     font-weight: bold;
   }
@@ -468,7 +490,7 @@ watchEffect(() => {
   .box2-2-sp,
   .box2-3-sp {
     margin: 10px;
-    height: 240px;
+    height: 280px;
     border-radius: 15px;
     text-align: center;
     margin-bottom: 20px;
@@ -486,6 +508,11 @@ watchEffect(() => {
   }
 
   .nomorLoket-sp {
+    font-size: 30px;
+    font-weight: bold;
+  }
+
+  .jenisLoket-sp {
     font-size: 30px;
     font-weight: bold;
   }
@@ -537,7 +564,7 @@ watchEffect(() => {
   .box2-2-sp,
   .box2-3-sp {
     margin: 10px;
-    height: 240px;
+    height: 280px;
     border-radius: 15px;
     text-align: center;
     margin-bottom: 20px;
@@ -555,6 +582,11 @@ watchEffect(() => {
   }
 
   .nomorLoket-sp {
+    font-size: 30px;
+    font-weight: bold;
+  }
+
+  .jenisLoket-sp {
     font-size: 30px;
     font-weight: bold;
   }
@@ -606,7 +638,7 @@ watchEffect(() => {
   .box2-2-sp,
   .box2-3-sp {
     margin: 10px;
-    height: 240px;
+    height: 280px;
     border-radius: 15px;
     text-align: center;
     margin-bottom: 20px;
@@ -624,6 +656,11 @@ watchEffect(() => {
   }
 
   .nomorLoket-sp {
+    font-size: 30px;
+    font-weight: bold;
+  }
+
+  .jenisLoket-sp {
     font-size: 30px;
     font-weight: bold;
   }
@@ -675,7 +712,7 @@ watchEffect(() => {
   .box2-2-sp,
   .box2-3-sp {
     margin: 10px;
-    height: 240px;
+    height: 280px;
     border-radius: 15px;
     text-align: center;
     margin-bottom: 20px;
@@ -693,6 +730,11 @@ watchEffect(() => {
   }
 
   .nomorLoket-sp {
+    font-size: 30px;
+    font-weight: bold;
+  }
+
+  .jenisLoket-sp {
     font-size: 30px;
     font-weight: bold;
   }
@@ -744,7 +786,7 @@ watchEffect(() => {
   .box2-2-sp,
   .box2-3-sp {
     margin: 10px;
-    height: 240px;
+    height: 280px;
     border-radius: 15px;
     text-align: center;
     margin-bottom: 20px;
@@ -762,6 +804,11 @@ watchEffect(() => {
   }
 
   .nomorLoket-sp {
+    font-size: 30px;
+    font-weight: bold;
+  }
+
+  .jenisLoket-sp {
     font-size: 30px;
     font-weight: bold;
   }
@@ -813,7 +860,7 @@ watchEffect(() => {
   .box2-2-sp,
   .box2-3-sp {
     margin: 10px;
-    height: 240px;
+    height: 280px;
     border-radius: 15px;
     text-align: center;
     margin-bottom: 20px;
@@ -831,6 +878,11 @@ watchEffect(() => {
   }
 
   .nomorLoket-sp {
+    font-size: 30px;
+    font-weight: bold;
+  }
+
+  .jenisLoket-sp {
     font-size: 30px;
     font-weight: bold;
   }
@@ -882,7 +934,7 @@ watchEffect(() => {
   .box2-2-sp,
   .box2-3-sp {
     margin: 10px;
-    height: 240px;
+    height: 280px;
     border-radius: 15px;
     text-align: center;
     margin-bottom: 20px;
@@ -900,6 +952,11 @@ watchEffect(() => {
   }
 
   .nomorLoket-sp {
+    font-size: 30px;
+    font-weight: bold;
+  }
+
+  .jenisLoket-sp {
     font-size: 30px;
     font-weight: bold;
   }
@@ -951,7 +1008,7 @@ watchEffect(() => {
   .box2-2-sp,
   .box2-3-sp {
     margin: 10px;
-    height: 240px;
+    height: 280px;
     border-radius: 15px;
     text-align: center;
     margin-bottom: 20px;
@@ -969,6 +1026,11 @@ watchEffect(() => {
   }
 
   .nomorLoket-sp {
+    font-size: 30px;
+    font-weight: bold;
+  }
+
+  .jenisLoket-sp {
     font-size: 30px;
     font-weight: bold;
   }

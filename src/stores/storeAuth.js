@@ -74,7 +74,7 @@ export const useStoreAuth = defineStore('storeAuth', {
           this.loginAdmin = dataLogin
           this.updateStatusLogin(this.loginAdmin)
           localStorage.setItem('isUserLogin', JSON.stringify(dataLogin))
-          router.replace('/counter')
+          router.replace('/loketadmin')
         })
         .catch((error) => {
           alert(error.message)

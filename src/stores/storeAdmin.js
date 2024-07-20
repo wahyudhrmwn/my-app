@@ -59,6 +59,11 @@ export const useStoreAdmin = defineStore('storeAdmin', {
         } else {
           alert("You clicked Cancel!");
         }
+    },
+    jenisLoket(typeAntrian) {
+      localStorage.setItem('jenisLoket', JSON.stringify({type: typeAntrian}))
+
+      router.replace('/counter')
     }
   }
 })

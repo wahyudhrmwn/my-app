@@ -69,22 +69,12 @@ export const useStoreAntrian = defineStore('storeAntrian', {
       this.antrianAktif = filteredData
 
       return this.antrianAktif
+    },
+    
+    jenisAntrian(typeAntrian) {
+      localStorage.setItem('jenisAntrian', JSON.stringify({type: typeAntrian}))
+
+      router.replace('/first')
     }
-    // getAntrianMenungguTerbesar() {
-    //     const dataMenunggu = this.dataAntrian.filter((data) => data.isQueue === true)
-    //     let dataMenungguAkhir = dataMenunggu.filter((data) => data)
-    //     let dataFilter = []
-
-    //     for (var i = 0; i < dataMenungguAkhir.length; i++) {
-    //       let lengthData = dataMenungguAkhir.length - 1
-    //       if (i === lengthData) {
-    //         dataFilter.push(dataMenungguAkhir[i])
-    //       }
-    //     }
-
-    //     dataMenungguAkhir = dataFilter
-
-    //     return dataMenungguAkhir
-    //   }
   }
 })

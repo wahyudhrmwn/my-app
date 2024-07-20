@@ -1,7 +1,4 @@
 <template>
-  <nav>
-    <Header></Header>
-  </nav>
 
   <div class="container">
     <div class="box box1-fp">
@@ -28,7 +25,7 @@
 </template>
 
 <script setup>
-import Header from '../components/HeaderComponent.vue'
+// import Header from '../components/HeaderComponent.vue'
 import { onMounted, watchEffect, ref } from 'vue'
 import { useRouter } from 'vue-router'
 // import { useStoreAdmin } from '@/stores/storeAdmin';
@@ -56,6 +53,8 @@ watchEffect(() => {
     let allData = storeAntrian.dataAntrian
     let localData = JSON.parse(localStorage.getItem('nomorAntrianAnda'))
     let dataLocalError = true
+    let typeData = JSON.parse(localStorage.getItem('jenisAntrian')).type
+    console.log(typeData)
 
     if(localData !== null) {
       for (var z = 0; z < allData.length; z++) {
@@ -128,7 +127,6 @@ watchEffect(() => {
 .container {
   height: 100vh;
   padding: 10px;
-  margin-top: 20px;
 }
 
 .box1-fp {
@@ -216,7 +214,6 @@ watchEffect(() => {
   .container {
     height: 100vh;
     padding: 10px;
-    margin-top: 20px;
   }
 
   .box1-fp {
@@ -296,7 +293,6 @@ watchEffect(() => {
   .container {
     height: 100vh;
     padding: 10px;
-    margin-top: 20px;
   }
 
   .box1-fp {
@@ -352,7 +348,6 @@ watchEffect(() => {
   .container {
     height: 100vh;
     padding: 10px;
-    margin-top: 20px;
   }
 
   .box1-fp {
@@ -409,7 +404,6 @@ watchEffect(() => {
   .container {
     height: 100vh;
     padding: 10px;
-    margin-top: 20px;
   }
 
   .box1-fp {
@@ -466,7 +460,6 @@ watchEffect(() => {
   .container {
     height: 100vh;
     padding: 10px;
-    margin-top: 20px;
   }
 
   .iconUsers-fp {
@@ -478,7 +471,6 @@ watchEffect(() => {
   .container {
     height: 100vh;
     padding: 10px;
-    margin-top: 20px;
   }
 
   .box1-fp {
@@ -566,7 +558,6 @@ watchEffect(() => {
   .container {
     height: 100vh;
     padding: 10px;
-    margin-top: 20px;
   }
 
   .iconUsers-fp {
@@ -578,7 +569,6 @@ watchEffect(() => {
   .container {
     height: 100vh;
     padding: 10px;
-    margin-top: 20px;
   }
 
   .box1-fp {
@@ -666,7 +656,6 @@ watchEffect(() => {
   .container {
     height: 100vh;
     padding: 10px;
-    margin-top: 20px;
   }
 
   .iconUsers-fp {
@@ -678,7 +667,6 @@ watchEffect(() => {
   .container {
     height: 100vh;
     padding: 10px;
-    margin-top: 20px;
   }
 
   .box1-fp {
@@ -765,7 +753,6 @@ watchEffect(() => {
   .container {
     height: 100vh;
     padding: 10px;
-    margin-top: 20px;
   }
 
   .iconUsers-fp {
@@ -777,7 +764,6 @@ watchEffect(() => {
   .container {
     height: 100vh;
     padding: 10px;
-    margin-top: 20px;
   }
 
   .box1-fp {
@@ -870,7 +856,6 @@ watchEffect(() => {
   .container {
     height: 100vh;
     padding: 10px;
-    margin-top: 20px;
   }
 
   .box1-fp {
@@ -957,7 +942,6 @@ watchEffect(() => {
   .container {
     height: 100vh;
     padding: 10px;
-    margin-top: 20px;
   }
 
   .iconUsers-fp {
@@ -969,7 +953,6 @@ watchEffect(() => {
   .container {
     height: 100vh;
     padding: 10px;
-    margin-top: 20px;
   }
 
   .box1-fp {
@@ -1056,7 +1039,6 @@ watchEffect(() => {
   .container {
     height: 100vh;
     padding: 10px;
-    margin-top: 20px;
   }
 
   .iconUsers-fp {
@@ -1068,7 +1050,6 @@ watchEffect(() => {
   .container {
     height: 100vh;
     padding: 10px;
-    margin-top: 20px;
   }
 
   .box1-fp {
