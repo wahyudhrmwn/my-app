@@ -28,7 +28,8 @@ import {
   faCircleXmark,
   faRightToBracket,
   faCircleUser,
-  faArrowRight
+  faArrowRight,
+  faCancel
 } from '@fortawesome/free-solid-svg-icons'
 
 /* add each imported icon to the library */
@@ -49,7 +50,8 @@ library.add(
   faCircleXmark,
   faRightToBracket,
   faCircleUser,
-  faArrowRight
+  faArrowRight,
+  faCancel
 )
 
 const app = createApp(App)

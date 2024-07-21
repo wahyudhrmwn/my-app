@@ -14,11 +14,18 @@
         </div>
       </div>
 
-      <div class="box box2-1-sp" v-for="(list, index) in dataAntrian" :key="index">
-        <div class="textAntrian-sp">ANTRIAN</div>
-        <div class="nomorAntrian-sp">{{ list.nomorAntrian }}</div>
-        <div class="nomorLoket-sp">Ke Loket {{ list.isLoket }}</div>
-        <div class="jenisLoket-sp">{{ loketAntrian.type === 'Pembayaran' ? 'Pembayaran Unpam' : loketAntrian.type }}</div>
+      <div v-if="activeData != 0">
+        <div class="box box2-1-sp" v-for="(list, index) in dataAntrian" :key="index">
+          <div class="textAntrian-sp">ANTRIAN</div>
+          <div class="nomorAntrian-sp">{{ list.nomorAntrian }}</div>
+          <div class="nomorLoket-sp">Ke Loket {{ list.isLoket }}</div>
+          <div class="jenisLoket-sp">{{ loketAntrian.type === 'Pembayaran' ? 'Pembayaran Unpam' : loketAntrian.type }}</div>
+        </div>
+      </div>
+      <div v-else>
+        <div class="box box2-1-sp">
+          <div class="textAntrian-sp">{{ dataNull }}</div>
+        </div>
       </div>
     </div>
   </div>
@@ -31,32 +38,24 @@ import router from '@/router'
 
 const storeAntrian = useStoreAntrian()
 
-onMounted(() => {
-  storeAntrian.getAllAntrian()
-})
+let typeData = ref('')
+let dataNull = ref('')
+let activeData = ref([])
+
 
 const localAntrian = ref(JSON.parse(localStorage.getItem('nomorAntrianAnda')))
 const loketAntrian = ref(JSON.parse(localStorage.getItem('jenisAntrian')))
 
-const dataAntrian = ref([
-  {
-    id: '',
-    isActive: false,
-    isCompleted: false,
-    isLoket: 0,
-    isQueue: false,
-    nomorAntrian: ''
-  }
-])
+const dataAntrian = ref([])
 
 const dataAllAntrian = ref([])
 
 const updateDataLokal = () => {
   let isComplete = false
-  let dataRealtime = dataAllAntrian.value
-  for (var i = 0; i < dataRealtime.length; i++) {
-    if (dataRealtime[i].id === localAntrian.value.id) {
-      if (dataRealtime[i].isCompleted === true) {
+  // let dataRealtime = dataAllAntrian.value
+  for (var i = 0; i < dataAllAntrian.value.length; i++) {
+    if (dataAllAntrian.value[i].id === localAntrian.value.id) {
+      if (dataAllAntrian.value[i].isCompleted === true) {
         isComplete = true
       }
     }
@@ -70,12 +69,25 @@ const updateDataLokal = () => {
 
 watchEffect(() => {
   if (storeAntrian.dataAntrian.length > 0) {
-    dataAntrian.value = storeAntrian.dataAntrian.filter((data) => data.isActive === true)
+    activeData.value = storeAntrian.dataAntrian.filter((data) => data.isActive === true)
+    // let queueData = storeAntrian.dataAntrian.filter((data) => data.isQueue === true)
+
+    if (activeData.value.length !== 0) {
+      dataAntrian.value = activeData.value
+    } else {
+      dataNull.value = 'Mohon menunggu admin akan segera memanggil'
+    }
+     
     dataAllAntrian.value = storeAntrian.dataAntrian
     updateDataLokal()
   }
 })
 
+onMounted(() => {
+  typeData.value = JSON.parse(localStorage.getItem('jenisAntrian')).type
+
+  storeAntrian.getAllAntrian(typeData.value)
+})
 
 
 // const nomorAntrianAnda = computed(() => {

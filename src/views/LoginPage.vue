@@ -47,39 +47,42 @@
 </template>
 
 <script setup>
+// import { useStoreAdmin } from '@/stores/storeAdmin';
 import { useStoreAuth } from '@/stores/storeAuth'
-import { onMounted, ref, watchEffect } from 'vue'
+import { onMounted, ref } from 'vue'
 
 
 const storeAuth = useStoreAuth()
+// const storeAdmin = useStoreAdmin()
 
 let emailAdmin = ref('')
 let passwordAdmin = ref('')
 let infoLogin = ref(false)
-let listAdmin = ref([])
+// let listAdmin = ref([])
 
 onMounted(() => {
   storeAuth.getAllAdmin()
+  // storeAdmin.getAllAdmin()
 })
 
-watchEffect(() => {
-  if(storeAuth.allAdmin.length > 0) {
-    let dataQueue = storeAuth.allAdmin
+// watchEffect(() => {
+//   if(storeAdmin.allAdmin.length > 0) {
+//     let dataQueue = storeAdmin.allAdmin
 
-      for (var i = 0; i < dataQueue.length; i++) {
-            let datas = {
-                id: dataQueue[i].id,
-                isActive: dataQueue[i].isActive,
-                isCompleted: dataQueue[i].isCompleted,
-                isLoket: dataQueue[i].isLoket,
-                isQueue: dataQueue[i].isQueue,
-                nomorAntrian: dataQueue[i].nomorAntrian
-            }
-            listAdmin.value.push(datas)
-        }
-      }
+//       for (var i = 0; i < dataQueue.length; i++) {
+//             let datas = {
+//                 id: dataQueue[i].id,
+//                 isActive: dataQueue[i].isActive,
+//                 isCompleted: dataQueue[i].isCompleted,
+//                 isLoket: dataQueue[i].isLoket,
+//                 isQueue: dataQueue[i].isQueue,
+//                 nomorAntrian: dataQueue[i].nomorAntrian
+//             }
+//             listAdmin.value.push(datas)
+//         }
+//       }
 
-  })
+//   })
 
 
 const btnRegister = (email, password) => {

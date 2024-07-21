@@ -1,46 +1,75 @@
 <template>
   <div class="col">
-  <div class="row row-monitor">
+    <div class="row row-monitor">
       <div class="col col-monitor">
         <div class="header-content">
-          <div class="title-loket">{{ loket.loket }}</div>
+          <div class="title-loket">{{ data.loketName }}</div>
         </div>
       </div>
-  </div>
-  <div class="row content-1">
-    <div class="col col-content-1">
-      <div class="text-content">
-        <div class="text-nomor">No Antrian</div>
-        <div class="text-angka">10</div>
-        <div class="text-loket">ke Loket 1</div>
+    </div>
+
+    <div v-if="data.items.find(item => item.type === 'content-1')" class="container__content-1">
+      <div class="row content-1">
+      <div class="col col-content-1">
+        <div class="text-content">
+          <div class="text-nomor">No Antrian</div>
+          <div class="text-angka">{{ data.items.find(item => item.type === 'content-1').nomorAntrian }}</div>
+          <div class="text-loket">ke Loket {{ data.items.find(item => item.type === 'content-1').isLoket }}</div>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="row content-2">
-    <div class="col col-content-2">
-      <div class="text-content">
-        <div class="text-nomor">No Antrian</div>
-        <div class="text-angka">11</div>
-        <div class="text-loket">ke Loket 2</div>
     </div>
-  </div>
-    <div class="col col-content-2">
-      <div class="text-content">
-        <div class="text-nomor">No Antrian</div>
-        <div class="text-angka">12</div>
-        <div class="text-loket">ke Loket 3</div>
+    
+    
+    <div v-if="data.items.find(item => item.type === 'content-2')" class="container__content-2">
+      <div class="row content-2">
+      <div class="col col-content-2" v-for="item in data.items.filter(item => item.type === 'content-2')" :key="item.id">
+        <div class="text-content">
+          <div class="text-nomor">No Antrian</div>
+          <div class="text-angka">{{ item.nomorAntrian }}</div>
+          <div class="text-loket">ke Loket {{ item.isLoket }}</div>
+        </div>
+      </div>
+      <!-- <div class="col col-content-2" >
+        <div class="text-content">
+          <div class="text-nomor">No Antrian</div>
+          <div class="text-angka">{{ 12 }}</div>
+          <div class="text-loket">ke Loket {{ 3 }}</div>
+        </div>
+      </div> -->
     </div>
+    </div>
+    
+
+    <!-- <div v-if="data.type === 'content-1'" class="row content-1">
+      <div v-for="item in data.items" :key="item.id" class="col col-content-1">
+        <div class="text-content">
+          <div class="text-nomor">No Antrian</div>
+          <div class="text-angka">{{ item.nomorAntrian }}</div>
+          <div class="text-loket">ke Loket {{ item.isLoket }}</div>
+        </div>
+      </div>
+    </div> -->
+    <!-- <div v-else-if="data.type === 'content-2'" class="row content-2">
+      <div v-for="item in data.items" :key="item.id" class="col col-content-2">
+        <div class="text-content">
+          <div class="text-nomor">No Antrian</div>
+          <div class="text-angka">{{ item.nomorAntrian }}</div>
+          <div class="text-loket">ke Loket {{ item.isLoket }}</div>
+        </div>
+      </div>
+    </div> -->
+
   </div>
-  </div>
-</div>
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
+import { defineProps } from 'vue'
 
 const props = defineProps({
-  loket: Object
+  data: Object
 })
+
 </script>
 
 <style scoped>
@@ -74,8 +103,6 @@ const props = defineProps({
   transform: translate(-50%, -50%);
 }
 
-
-
 .content-1 {
   display: flex;
   width: 100%;
@@ -108,11 +135,10 @@ const props = defineProps({
   transform: translate(-50%, -50%);
 }
 
-
 .text-angka {
-  margin-top: 2px;
-  margin-bottom: 2px;
-  font-size: 34px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  font-size: 40px;
 }
 
 .title-loket {

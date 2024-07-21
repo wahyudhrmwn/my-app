@@ -18,74 +18,50 @@
           <font-awesome-icon icon="fa-solid fa-circle-plus" class="iconPlus-fp" />
           <p>Ambil Nomor</p>
         </div>
-        <!-- <span class="loader"></span> -->
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-// import Header from '../components/HeaderComponent.vue'
 import { onMounted, watchEffect, ref } from 'vue'
-import { useRouter } from 'vue-router'
-// import { useStoreAdmin } from '@/stores/storeAdmin';
+// import { useRouter } from 'vue-router'
 import { useStoreAntrian } from '@/stores/storeAntrian'
 
 /*Using Store*/
-// const storeAdmin = useStoreAdmin()
 const storeAntrian = useStoreAntrian()
-const router = useRouter()
+// const router = useRouter()
+
+let typeData = ref('')
+
+let nomorAnda = ref({})
 
 onMounted(() => {
-  storeAntrian.getAllAntrian()
+   typeData.value = JSON.parse(localStorage.getItem('jenisAntrian')).type
+
+  storeAntrian.getAllAntrian(typeData.value)
 })
 
 const btnAmbilAntrian = () => {
-  storeAntrian.ambilAntrian(nomorAnda.value.nomorAntrian)
+  typeData.value = JSON.parse(localStorage.getItem('jenisAntrian')).type
+
+  storeAntrian.ambilAntrian(nomorAnda.value.nomorAntrian, typeData.value)
 }
 
-let nomorAnda = ref({})
 
 watchEffect(() => {
   if (storeAntrian.dataAntrian.length > 0) {
     let dataQueue = storeAntrian.dataAntrian.filter((data) => data.isQueue === true)
     let dataAktif = storeAntrian.dataAntrian.filter((data) => data.isActive === true)
     let allData = storeAntrian.dataAntrian
-    let localData = JSON.parse(localStorage.getItem('nomorAntrianAnda'))
-    let dataLocalError = true
     let typeData = JSON.parse(localStorage.getItem('jenisAntrian')).type
-    console.log(typeData)
+    console.log('typeData : ',typeData)
+    console.log('dataQueue : ',dataQueue)
+    console.log('dataAktif : ',dataAktif)
+    console.log('allData : ',allData)
 
-    if(localData !== null) {
-      for (var z = 0; z < allData.length; z++) {
-      if (localData.nomorAntrian === allData[z].nomorAntrian) {
-        dataLocalError = false
-        if (allData[z].isCompleted === true) {
-          localStorage.removeItem('nomorAntrianAnda')
-        } else {
-          router.replace('/second')
-        }
-      }
-    }
-    
-    if(dataLocalError) {
-        localStorage.removeItem('nomorAntrianAnda')
-      }
-    }
-    
-
-    if (dataQueue.length === 0 && dataAktif.length === 0) {
-      nomorAnda.value = {
-        id: '1',
-        isActive: false,
-        isCompleted: false,
-        isLoket: 0,
-        isQueue: true,
-        nomorAntrian: '1'
-      }
-    } else {
-      if (dataQueue.length === 0) {
-        let dataAktifTerbesar = dataAktif
+    if (dataQueue.length === 0) {
+      let dataAktifTerbesar = dataAktif
 
         dataAktifTerbesar.sort((a, b) => parseInt(b.id) - parseInt(a.id))
 
@@ -95,11 +71,12 @@ watchEffect(() => {
           isCompleted: false,
           isLoket: 0,
           isQueue: true,
-          nomorAntrian: (parseInt(dataAktifTerbesar[0].nomorAntrian) + 1).toString()
+          nomorAntrian: (parseInt(dataAktifTerbesar[0].nomorAntrian) + 1).toString(),
+          type: typeData.value
         }
-      } else {
-        for (var i = 0; i < dataQueue.length; i++) {
-          let lengthData = storeAntrian.dataAntrian.length - 1
+    } else {
+      for (var i = 0; i < dataQueue.length; i++) {
+          let lengthData = allData.length
           if (parseInt(dataQueue[i].id) === lengthData) {
             nomorAnda.value = {
               id: (parseInt(dataQueue[i].id) + 1).toString(),
@@ -111,8 +88,80 @@ watchEffect(() => {
             }
           }
         }
-      }
     }
+
+    // if (dataQueue.length === 0 && dataAktif.length === 0) {
+    //   nomorAnda.value = {
+    //     id: '1',
+    //     isActive: false,
+    //     isCompleted: false,
+    //     isLoket: 0,
+    //     isQueue: true,
+    //     nomorAntrian: '1'
+    //   }
+    // } else {
+    //   if (dataQueue.length === 0) {
+    //     let dataAktifTerbesar = dataAktif
+
+    //     dataAktifTerbesar.sort((a, b) => parseInt(b.id) - parseInt(a.id))
+
+    //     nomorAnda.value = {
+    //       id: (parseInt(dataAktifTerbesar[0].id) + 1).toString(),
+    //       isActive: false,
+    //       isCompleted: false,
+    //       isLoket: 0,
+    //       isQueue: true,
+    //       nomorAntrian: (parseInt(dataAktifTerbesar[0].nomorAntrian) + 1).toString()
+    //     }
+    //   } else {
+    //     for (var i = 0; i < dataQueue.length; i++) {
+    //       let lengthData = storeAntrian.dataAntrian.length - 1
+    //       if (parseInt(dataQueue[i].id) === lengthData) {
+    //         nomorAnda.value = {
+    //           id: (parseInt(dataQueue[i].id) + 1).toString(),
+    //           isActive: false,
+    //           isCompleted: false,
+    //           isLoket: 0,
+    //           isQueue: true,
+    //           nomorAntrian: (parseInt(dataQueue[i].nomorAntrian) + 1).toString()
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
+
+    // let localData = JSON.parse(localStorage.getItem('nomorAntrianAnda'))
+    // let dataLocalError = true
+
+    // if(localData !== null) {
+    //   for (var z = 0; z < allData.length; z++) {
+    //   if (localData.nomorAntrian === allData[z].nomorAntrian) {
+    //     dataLocalError = false
+    //     if (allData[z].isCompleted === true) {
+    //       localStorage.removeItem('nomorAntrianAnda')
+    //     } else {
+    //       router.replace('/second')
+    //     }
+    //   }
+    // }
+    
+    // if(dataLocalError) {
+    //     localStorage.removeItem('nomorAntrianAnda')
+    //   }
+    // }
+    
+
+    
+  } else {
+    nomorAnda.value = {
+        id: '1',
+        isActive: false,
+        isCompleted: false,
+        isLoket: 0,
+        isQueue: false,
+        nomorAntrian: '1',
+        type: typeData.value
+      }
   }
 })
 </script>

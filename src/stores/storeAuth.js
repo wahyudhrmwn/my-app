@@ -8,15 +8,22 @@ import { collection, onSnapshot, doc, updateDoc } from 'firebase/firestore'
 export const useStoreAuth = defineStore('storeAuth', {
   state: () => {
     return {
-      loginAdmin: [],
+      allAdminLogin: [],
       allAdmin: [],
-      logoutAdmin: []
+      logoutAdmin: [],
+      loginAdminUnpam: [],
+      loginAdminCS: [],
+      loginAdminBPR: [],
+      loginAdminEvenet: [],
+      loginAdminDukcapil: []
     }
   },
   actions: {
     getAllAdmin() {
       onSnapshot(collection(db, 'admin'), (querySnapshot) => {
         let data = []
+        this.allAdmin = []
+
         querySnapshot.forEach((doc) => {
           let adminLogin = {
             id: doc.data().id,
@@ -24,12 +31,14 @@ export const useStoreAuth = defineStore('storeAuth', {
             password: doc.data().password,
             nama: doc.data().nama,
             isLoket: doc.data().isLoket,
-            isLogin: doc.data().isLogin
+            isLogin: doc.data().isLogin,
+            type: doc.data().type
           }
           data.push(adminLogin)
         })
 
         this.allAdmin.push(data)
+        console.log(this.allAdmin)
       })
     },
     registerUser(email, password) {
@@ -62,7 +71,8 @@ export const useStoreAuth = defineStore('storeAuth', {
                 password: this.allAdmin[0][i].password,
                 nama: this.allAdmin[0][i].nama,
                 isLoket: this.allAdmin[0][i].isLoket,
-                isLogin: !this.allAdmin[0][i].isLogin
+                isLogin: true,
+                type: this.allAdmin[0][i].type
               }
 
               dataLogin.push(adminLogin)
@@ -71,8 +81,8 @@ export const useStoreAuth = defineStore('storeAuth', {
 
           
 
-          this.loginAdmin = dataLogin
-          this.updateStatusLogin(this.loginAdmin)
+          this.allAdminLogin = dataLogin
+          this.updateStatusLogin(this.allAdminLogin)
           localStorage.setItem('isUserLogin', JSON.stringify(dataLogin))
           router.replace('/loketadmin')
         })
@@ -122,11 +132,7 @@ export const useStoreAuth = defineStore('storeAuth', {
     async updateStatusLogin(dataLogin) {
 
       await updateDoc(doc(collection(db, 'admin'), dataLogin[0].id), {
-        email: dataLogin[0].email,
-        isLogin: dataLogin[0].isLogin,
-        isLoket: dataLogin[0].isLoket,
-        nama: dataLogin[0].nama,
-        password: dataLogin[0].password
+        ...dataLogin[0]
       });
 
     },

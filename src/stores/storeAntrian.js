@@ -13,9 +13,9 @@ export const useStoreAntrian = defineStore('storeAntrian', {
     }
   },
   actions: {
-    async getAllAntrian() {
+    async getAllAntrian(type) {
       this.dataAntrian = []
-      const q = query(collection(db, 'dataAntrian'))
+      const q = query(collection(db, `/getAntrian/${type}/antrian`))
       onSnapshot(q, (querySnapshot) => {
         const datas = []
         querySnapshot.forEach((doc) => {
@@ -25,29 +25,33 @@ export const useStoreAntrian = defineStore('storeAntrian', {
             isCompleted: doc.data().isCompleted,
             isLoket: doc.data().isLoket,
             isQueue: doc.data().isQueue,
-            nomorAntrian: doc.data().nomorAntrian
+            nomorAntrian: doc.data().nomorAntrian,
+            type: doc.data().type
           })
         })
         this.dataAntrian = datas
+        console.log('data type CS : ', this.dataAntrian)
       })
     },
-    async ambilAntrian(nomorAnda) {
+    async ambilAntrian(nomorAnda, type) {
       this.antrianBaru = {
         id: nomorAnda.toString(),
         isActive: false,
         isCompleted: false,
         isLoket: 0,
         isQueue: true,
-        nomorAntrian: nomorAnda.toString()
+        nomorAntrian: nomorAnda.toString(),
+        type: type
       }
 
-      await setDoc(doc(collection(db, 'dataAntrian'), this.antrianBaru.id), {
+      await setDoc(doc(collection(db, `/getAntrian/${type}/antrian`), this.antrianBaru.id), {
         id: this.antrianBaru.id,
         isActive: this.antrianBaru.isActive,
         isCompleted: this.antrianBaru.isCompleted,
         isLoket: this.antrianBaru.isLoket,
         isQueue: this.antrianBaru.isQueue,
-        nomorAntrian: this.antrianBaru.nomorAntrian
+        nomorAntrian: this.antrianBaru.nomorAntrian,
+        type: this.antrianBaru.type
       })
 
       localStorage.setItem('nomorAntrianAnda', JSON.stringify(this.antrianBaru))

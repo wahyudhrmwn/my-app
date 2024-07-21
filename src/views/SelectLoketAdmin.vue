@@ -24,7 +24,7 @@
       </div>
 
       <div class="box box2-3">
-        <div class="contentBox2-3" @click="btnLoket('Pembayaran')">
+        <div class="contentBox2-3" @click="btnLoket('Unpam')">
           <font-awesome-icon icon="fa-solid fa-arrow-right" class="iconPlus" />
           <p>Jaga di Loket Pembayaran Unpam</p>
         </div>

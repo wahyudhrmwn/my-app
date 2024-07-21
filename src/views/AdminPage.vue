@@ -46,11 +46,11 @@
           <div class="row1-col3">
             <div class="box box1-column3-row1">{{ day + ', ' + formattedDate }}</div>
           </div>
-          <div class="row1-col3" @click="storeAdmin.resetAntrian()">
-            <div class="box box2-column3-row1">Reset Antrian</div>
+          <div class="row1-col3">
+            <div class="box box2-column3-row1" @click="storeAdmin.resetAntrian(typeData.value)">Reset Antrian</div>
           </div>
-          <div class="row1-col3" @click="storeAuth.logoutUser(allAdminLogin)">
-            <div class="box box3-column3-row1">Logout</div>
+          <div class="row1-col3">
+            <div class="box box3-column3-row1" @click="storeAuth.logoutUser(allAdminLogin)">Logout</div>
           </div>
         </div>
       </div>
@@ -58,7 +58,7 @@
     <div class="row2">
       <div class="columns columns2">
         <div class="column is-one-thirds column1-row2">
-          <div class="box box1-row2-column1">LOKET 1 {{ loketAdmin.type === 'Pembayaran' ? 'Pembayaran Unpam' : loketAdmin.type }}</div>
+          <div class="box box1-row2-column1">LOKET 1 {{ loketAdmin.type === 'Unpam' ? 'Pembayaran Unpam' : loketAdmin.type }}</div>
           <div class="box box2-row2-column1">
             {{ admin1.isLogin === true ? admin1.nama : 'CLOSE' }}
           </div>
@@ -74,7 +74,7 @@
           </div>
         </div>
         <div class="column is-one-thirds column2-row2">
-          <div class="box box1-row2-column1">LOKET 2 {{ loketAdmin.type === 'Pembayaran' ? 'Pembayaran Unpam' : loketAdmin.type }}</div>
+          <div class="box box1-row2-column1">LOKET 2 {{ loketAdmin.type === 'Unpam' ? 'Pembayaran Unpam' : loketAdmin.type }}</div>
           <div class="box box2-row2-column1">
             {{ admin2.isLogin === true ? admin2.nama : 'CLOSE' }}
           </div>
@@ -91,7 +91,7 @@
         </div>
         <div class="column is-one-thirds column3-row2">
           <div class="box box1-row2-column1">
-            LOKET 3 {{ loketAdmin.type === 'Pembayaran' ? 'Pembayaran Unpam' : loketAdmin.type }}
+            LOKET 3 {{ loketAdmin.type === 'Unpam' ? 'Pembayaran Unpam' : loketAdmin.type }}
           </div>
           <div class="box box2-row2-column1">
             {{ admin3.isLogin === true ? admin3.nama : 'CLOSE' }}
@@ -141,6 +141,7 @@ let antrianAktif = ref([])
 let antrianMenunggu = ref([])
 let adminLogin = JSON.parse(localStorage.getItem('isUserLogin'))
 let loketAdmin = JSON.parse(localStorage.getItem('jenisLoket'))
+let typeData = ref(JSON.parse(localStorage.getItem('jenisLoket')).type)
 
 const weekday = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu']
 const currentDate = new Date()
@@ -161,7 +162,8 @@ let admin1 = ref({
   isLogin: false,
   isLoket: 0,
   nama: '',
-  password: ''
+  password: '',
+  type:''
 })
 let admin2 = ref({
   email: '',
@@ -169,7 +171,8 @@ let admin2 = ref({
   isLogin: false,
   isLoket: 0,
   nama: '',
-  password: ''
+  password: '',
+  type:''
 })
 let admin3 = ref({
   email: '',
@@ -177,7 +180,8 @@ let admin3 = ref({
   isLogin: false,
   isLoket: 0,
   nama: '',
-  password: ''
+  password: '',
+  type:''
 })
 
 let loket1Off = ref(true)
@@ -187,7 +191,8 @@ let loket3Off = ref(true)
 let dataMenunggu = ref([])
 
 onMounted(() => {
-  storeAntrian.getAllAntrian()
+  typeData.value = JSON.parse(localStorage.getItem('jenisLoket')).type
+  storeAntrian.getAllAntrian(typeData.value)
   storeAdmin.getAllAdmin()
 })
 
@@ -196,7 +201,7 @@ const btnAntrianSelanjutnya = (isLoket) => {
 
   for (var i = 0; i < dataSebelum.length; i++) {
     if (dataSebelum[i].isLoket === isLoket) {
-      updateDoc(doc(collection(db, 'dataAntrian'), dataSebelum[i].id), {
+      updateDoc(doc(collection(db, `getAntrian/${typeData.value}/antrian`), dataSebelum[i].id), {
         id: dataSebelum[i].id,
         nomorAntrian: dataSebelum[i].nomorAntrian,
         isActive: false,
@@ -229,7 +234,7 @@ const updateAntrianBaru = (isLoket) => {
   let antrianSelanjutnya = dataMenunggu.value[0]
 
   if (antrianSelanjutnya.isQueue === true && antrianSelanjutnya.isLoket === 0) {
-    updateDoc(doc(collection(db, 'dataAntrian'), antrianSelanjutnya.id), {
+    updateDoc(doc(collection(db, `getAntrian/${typeData.value}/antrian`), antrianSelanjutnya.id), {
       id: antrianSelanjutnya.id,
       nomorAntrian: antrianSelanjutnya.nomorAntrian,
       isActive: true,
@@ -258,40 +263,45 @@ const mappingDataAktif = () => {
 
 const mappingDataAdmin = () => {
   for (var i = 0; i < allAdminLogin.value.length; i++) {
-    if (allAdminLogin.value[i].isLogin === true && allAdminLogin.value[i].isLoket === 1) {
+    const dataLogin = allAdminLogin.value[i]
+
+    if (dataLogin.isLogin === true && dataLogin.isLoket === 1 && dataLogin.type === typeData.value) {
       admin1.value = {
-        email: allAdminLogin.value[i].email,
-        id: allAdminLogin.value[i].id,
-        isLogin: allAdminLogin.value[i].isLogin,
-        isLoket: allAdminLogin.value[i].isLoket,
-        nama: allAdminLogin.value[i].nama,
-        password: allAdminLogin.value[i].password
+        email: dataLogin.email,
+        id: dataLogin.id,
+        isLogin: dataLogin.isLogin,
+        isLoket: dataLogin.isLoket,
+        nama: dataLogin.nama,
+        password: dataLogin.password,
+        type: dataLogin.type
       }
 
       loket1Off.value = false
     }
 
-    if (allAdminLogin.value[i].isLogin === true && allAdminLogin.value[i].isLoket === 2) {
+    if (dataLogin.isLogin === true && dataLogin.isLoket === 2 && dataLogin.type === typeData.value) {
       admin2.value = {
-        email: allAdminLogin.value[i].email,
-        id: allAdminLogin.value[i].id,
-        isLogin: allAdminLogin.value[i].isLogin,
-        isLoket: allAdminLogin.value[i].isLoket,
-        nama: allAdminLogin.value[i].nama,
-        password: allAdminLogin.value[i].password
+        email: dataLogin.email,
+        id: dataLogin.id,
+        isLogin: dataLogin.isLogin,
+        isLoket: dataLogin.isLoket,
+        nama: dataLogin.nama,
+        password: dataLogin.password,
+        type: dataLogin.type
       }
 
       loket2Off.value = false
     }
 
-    if (allAdminLogin.value[i].isLogin === true && allAdminLogin.value[i].isLoket === 3) {
+    if (dataLogin.isLogin === true && dataLogin.isLoket === 3 && dataLogin.type === typeData.value) {
       admin3.value = {
-        email: allAdminLogin.value[i].email,
-        id: allAdminLogin.value[i].id,
-        isLogin: allAdminLogin.value[i].isLogin,
-        isLoket: allAdminLogin.value[i].isLoket,
-        nama: allAdminLogin.value[i].nama,
-        password: allAdminLogin.value[i].password
+        email: dataLogin.email,
+        id: dataLogin.id,
+        isLogin: dataLogin.isLogin,
+        isLoket: dataLogin.isLoket,
+        nama: dataLogin.nama,
+        password: dataLogin.password,
+        type: dataLogin.type
       }
       loket3Off.value = false
     }
@@ -316,30 +326,36 @@ watchEffect(() => {
     antrianAktif.value = []
 
     for (var i = 0; i < dataAktif.length; i++) {
-      if (dataAktif[i].isActive === true && dataAktif[i].isQueue === false) {
+      const active = dataAktif[i]
+      if (active.isActive === true && active.isQueue === false) {
         let datas = {
-          id: dataAktif[i].id,
-          isActive: dataAktif[i].isActive,
-          isCompleted: dataAktif[i].isCompleted,
-          isLoket: dataAktif[i].isLoket,
-          isQueue: dataAktif[i].isQueue,
-          nomorAntrian: dataAktif[i].nomorAntrian
+          id: active.id,
+          isActive: active.isActive,
+          isCompleted: active.isCompleted,
+          isLoket: active.isLoket,
+          isQueue: active.isQueue,
+          nomorAntrian: active.nomorAntrian,
+          type: active.type
         }
         antrianAktif.value.push(datas)
       }
     }
 
+    console.log(antrianAktif.value, 'Antrian aktif watch effect')
+
     antrianMenunggu.value = []
 
     for (var x = 0; x < dataQueue.length; x++) {
-      if (dataQueue[x].isActive === false && dataQueue[x].isQueue === true) {
+      const queue = dataQueue[x]
+      if (queue.isActive === false && queue.isQueue === true) {
         let datas = {
-          id: dataQueue[x].id,
-          isActive: dataQueue[x].isActive,
-          isCompleted: dataQueue[x].isCompleted,
-          isLoket: dataQueue[x].isLoket,
-          isQueue: dataQueue[x].isQueue,
-          nomorAntrian: dataQueue[x].nomorAntrian
+          id: queue.id,
+          isActive: queue.isActive,
+          isCompleted: queue.isCompleted,
+          isLoket: queue.isLoket,
+          isQueue: queue.isQueue,
+          nomorAntrian: queue.nomorAntrian,
+          type: queue.type
         }
         antrianMenunggu.value.push(datas)
       }
@@ -349,17 +365,21 @@ watchEffect(() => {
     mappingDataMenunggu()
   }
 
+  console.log(storeAdmin.allAdmin.length);
+
   if (storeAdmin.allAdmin.length > 0) {
     let dataLoginAdmin = storeAdmin.allAdmin
     allAdminLogin.value = []
     for (var y = 0; y < dataLoginAdmin[0].length; y++) {
+      const loginAdmin = dataLoginAdmin[0][y]
       let datas = {
-        email: dataLoginAdmin[0][y].email,
-        id: dataLoginAdmin[0][y].id,
-        isLogin: dataLoginAdmin[0][y].isLogin,
-        isLoket: dataLoginAdmin[0][y].isLoket,
-        nama: dataLoginAdmin[0][y].nama,
-        password: dataLoginAdmin[0][y].password
+        email: loginAdmin.email,
+        id: loginAdmin.id,
+        isLogin: loginAdmin.isLogin,
+        isLoket: loginAdmin.isLoket,
+        nama: loginAdmin.nama,
+        password: loginAdmin.password,
+        type: loginAdmin.type
       }
 
       allAdminLogin.value.push(datas)

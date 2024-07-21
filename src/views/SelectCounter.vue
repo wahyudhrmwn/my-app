@@ -17,24 +17,56 @@ import { useStoreAdmin } from '@/stores/storeAdmin';
           </div>
           <div class="dropdown-menu" id="dropdown-menu" role="menu">
             <div class="dropdown-content">
-              <a class="dropdown-item" @click="counter('Loket 1')">
+              <div v-if="!counter1Picked">
+                <a class="dropdown-item" @click="counter('Loket 1')">
                 Jaga Di Loket 1
                 <span class="icon is-small is-right">
-                  <font-awesome-icon icon="fa-solid fa-check" />
+                  <font-awesome-icon icon="fa-solid fa-check"/>
                 </span>
               </a>
-              <a class="dropdown-item" @click="counter('Loket 2')">
+              </div>
+              <div v-else>
+                <a class="dropdown-item">
+                Jaga Di Loket 1
+                <span class="icon is-small is-right">
+                  <font-awesome-icon icon="fa-solid fa-cancel"/>
+                </span>
+              </a>
+              </div>
+              
+              <div v-if="!counter2Picked">
+                <a class="dropdown-item" @click="counter('Loket 2')">
                 Jaga Di Loket 2
                 <span class="icon is-small is-right">
                   <font-awesome-icon icon="fa-solid fa-check" />
                 </span>
               </a>
-              <a class="dropdown-item" @click="counter('Loket 3')">
+              </div>
+              <div v-else>
+                <a class="dropdown-item">
+                Jaga Di Loket 2
+                <span class="icon is-small is-right">
+                  <font-awesome-icon icon="fa-solid fa-cancel" />
+                </span>
+              </a>
+              </div>
+              
+              <div v-if="!counter3Picked">
+                <a class="dropdown-item" @click="counter('Loket 3')">
                 Jaga Di Loket 3
                 <span class="icon is-small is-right">
                   <font-awesome-icon icon="fa-solid fa-check" />
                 </span>
               </a>
+              </div>
+              <div v-else>
+                <a class="dropdown-item">
+                Jaga Di Loket 3
+                <span class="icon is-small is-right">
+                  <font-awesome-icon icon="fa-solid fa-cancel" />
+                </span>
+              </a>
+              </div>
             </div>
           </div>
         </div>
@@ -50,7 +82,7 @@ import { useStoreAdmin } from '@/stores/storeAdmin';
 <script setup>
 import { useRouter } from 'vue-router';
 import { useStoreAdmin } from '@/stores/storeAdmin'
-import { onMounted, watchEffect } from 'vue';
+import { onMounted, watchEffect, ref } from 'vue';
 import { useStoreAuth } from '@/stores/storeAuth';
 // import { useStoreAntrian } from '@/stores/storeAntrian'
 
@@ -59,16 +91,36 @@ const storeAdmin = useStoreAdmin()
 const storeAuth = useStoreAuth()
 // const storeAntrian = useStoreAntrian()
 
+let typeData = ref(JSON.parse(localStorage.getItem('jenisLoket')).type)
+
 onMounted(() => {
+  typeData.value = JSON.parse(localStorage.getItem('jenisLoket')).type
   storeAdmin.getAllAdmin()
 })
 
 let login = JSON.parse(localStorage.getItem('isUserLogin'))
 let dbAdmin = []
+let counter1Picked = ref(false)
+let counter2Picked = ref(false)
+let counter3Picked = ref(false)
 
 watchEffect(() => {
   if(storeAdmin.allAdmin.length > 0) {
     dbAdmin = storeAdmin.allAdmin
+    // console.log('dbAdmin view counter : ', dbAdmin)
+    for(var z = 0; z < dbAdmin[0].length; z++) {
+      if(typeData.value === dbAdmin[0][z].type && dbAdmin[0][z].isLoket === 1) {
+        counter1Picked.value = true
+      }
+
+      if(typeData.value === dbAdmin[0][z].type && dbAdmin[0][z].isLoket === 2) {
+        counter2Picked.value = true
+      }
+
+      if(typeData.value === dbAdmin[0][z].type && dbAdmin[0][z].isLoket === 3) {
+        counter3Picked.value = true
+      }
+    }
   }
 })
 
@@ -84,12 +136,16 @@ const counter = (loket) => {
             password: dbAdmin[0][i].password,
             nama: dbAdmin[0][i].nama,
             isLoket: 1,
-            isLogin: dbAdmin[0][i].isLogin
+            isLogin: dbAdmin[0][i].isLogin,
+            type: typeData.value
           }
+
+          
         })
-        router.replace('/admin')
-        localStorage.setItem('isUserLogin', JSON.stringify(storeAdmin.allAdmin[0][i]))
+        storeAdmin.inputDataLoket(dbAdmin[0][i], typeData.value)
         storeAuth.updateStatusLogin([storeAdmin.allAdmin[0][i]])
+        localStorage.setItem('isUserLogin', JSON.stringify(storeAdmin.allAdmin[0][i]))
+        router.replace('/admin')
       } else if (loket === 'Loket 2') {
         storeAdmin.$patch((state) => {
           state.allAdmin[0][i] = {
@@ -98,12 +154,14 @@ const counter = (loket) => {
             password: dbAdmin[0][i].password,
             nama: dbAdmin[0][i].nama,
             isLoket: 2,
-            isLogin: dbAdmin[0][i].isLogin
+            isLogin: dbAdmin[0][i].isLogin,
+            type: typeData.value
           }
         })
-        router.replace('/admin')
-        localStorage.setItem('isUserLogin', JSON.stringify(storeAdmin.allAdmin[0][i]))
+        storeAdmin.inputDataLoket(dbAdmin[0][i], typeData.value)
         storeAuth.updateStatusLogin([storeAdmin.allAdmin[0][i]])
+        localStorage.setItem('isUserLogin', JSON.stringify(storeAdmin.allAdmin[0][i]))
+        router.replace('/admin')
       } else if (loket === 'Loket 3') {
         storeAdmin.$patch((state) => {
           state.allAdmin[0][i] = {
@@ -112,12 +170,14 @@ const counter = (loket) => {
             password: dbAdmin[0][i].password,
             nama: dbAdmin[0][i].nama,
             isLoket: 3,
-            isLogin: dbAdmin[0][i].isLogin
+            isLogin: dbAdmin[0][i].isLogin,
+            type: typeData.value
           }
         })
-        router.replace('/admin')
-        localStorage.setItem('isUserLogin', JSON.stringify(storeAdmin.allAdmin[0][i]))
+        storeAdmin.inputDataLoket(dbAdmin[0][i], typeData.value)
         storeAuth.updateStatusLogin([storeAdmin.allAdmin[0][i]])
+        localStorage.setItem('isUserLogin', JSON.stringify(storeAdmin.allAdmin[0][i]))
+        router.replace('/admin')
       }
     }
   }
